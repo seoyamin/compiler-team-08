@@ -10,7 +10,7 @@
 #define FALSE 0
 #define TRUE 1
 
-#define isLetter(x) ( ((x) >= 'a' && (x) <= 'z') || ((x) >= 'A' && (x) <= 'Z') )]
+#define isLetter(x) ( ((x) >= 'a' && (x) <= 'z') || ((x) >= 'A' && (x) <= 'Z') )
 #define isDigit(x) ( (x) >= '0' && (x) <= '9' )
 
 typedef struct HTentry *HTpointer;

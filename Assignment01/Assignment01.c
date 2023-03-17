@@ -170,3 +170,85 @@ void ComputeHS(int nid, int nfree){
 		code += (int)ST[i];
 	hashcode = code % HTsize;
 }
+
+// LookupHs
+
+void LookupHS(int nid, int hscode)
+{
+	HTpointer here;
+	int i, j;
+
+	found = FALSE;
+	if (HT[hscode] != NULL) {
+		here = HT[hscode];
+		while (here != NULL && found == FALSE) {
+			found = TRUE;
+			i = here->index;
+			j = nid;
+			sameid = i;
+
+			while (ST[i] != '\0' && ST[j] != '\0' && found == TRUE) {
+				if (ST[i] != ST[j])
+					found = FALSE;
+				else {
+					i++;
+					j++;
+				}
+			}
+			here = here->next;
+		}
+	}
+}
+
+// ADDHT
+
+void ADDHT(int hscode)
+{
+	HTpointer ptr;
+
+	ptr = (HTpointer)malloc(sizeof(ptr));
+	ptr->index = nextid;
+	ptr->next = HT[hscode];
+	HT[hscode] = ptr;
+}
+
+// MAIN
+
+int main()
+{
+	int i;
+	PrintHeading();
+	initialize();
+
+	while (input != EOF) {
+		err = noerror;
+		SkipSeperators();
+		ReadID();
+		if (input != EOF && err != illid) {
+			if (nextfree = STsize) {
+				err = overst;
+				PrintError(err);
+			}
+			ST[nextfree++] = '\0';
+
+			ComputeHS(nextid, nextfree);
+			LookupHS(nextid, hashcode);
+
+			if (!found) {
+				printf("%6d			", nextid);
+				for (i = nextid; i < nextfree - 1; i++)
+					printf("%c", ST[i]);
+				printf("		(entered)\n");
+				ADDHT(hashcode);
+			}
+			else {
+				printf("%6d			", sameid);
+				for (i = nextid; i < nextfree - 1; i++)
+					printf("%c", ST[i]);
+				printf("		(already existed)\n");
+				nextfree = nextid;
+			}
+		}
+	}
+	PrintHStable();
+}

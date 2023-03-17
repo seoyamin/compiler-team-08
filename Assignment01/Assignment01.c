@@ -101,3 +101,69 @@ void PrintHStable() {
 	}
 }
 
+
+// PrintError
+void PrintError(ERRORtypes err){
+	switch(err){
+		case overst :
+			printf("...Error...		OVERFLOW");
+			PrintHStable();
+			exit(0);
+			break;
+		case illsp :
+			printf("...Error...		%c is illegal seperator \n", input);
+			break;
+		case illid :
+			printf("...Error... ");
+			while(input != EOF && (isLetter(input) || isDigit(input))){
+				printf("%c", input);
+				input = fgetc(fp);
+			}
+			printf("start with digit \n");
+			break;
+	}
+}
+
+
+// Skip Seperators
+
+void SkipSeperators(){
+	while(input != EOF && !(isLetter(input) || isDigit(input))){
+		if(!isSeperator(input)){
+			err = illsp;
+			PrintError(err);
+		}
+		input = fgetc(fp);
+	}
+}
+
+
+// ReadIO
+
+void ReadID() {
+	nextid = nextfree;
+	if(isDigit(input)){
+		err = illid;
+		PrintError(err);
+	}
+	else{
+		while(input != EOF && (isLetter(input) || isDigit(input))){
+			if(nextfree == STsize){
+				err = overst;
+				PrintError(err);
+			}
+			ST[nextfree++] = input;
+			input = fgetc(fp);
+		}
+	}
+}
+
+
+// ComputeHS
+
+void ComputeHS(int nid, int nfree){
+	int code int i;
+	code = 0;
+	for(i = nid; i < nfree - 1; i++)
+		code += (int)ST[i];
+	hashcode = code % HTsize;

@@ -13,7 +13,7 @@
 #define isLetter(x) ( ((x) >= 'a' && (x) <= 'z') || ((x) >= 'A' && (x) <= 'Z') )]
 #define isDigit(x) ( (x) >= '0' && (x) <= '9' )
 
-typedef struct HTentry *HTpointer,
+typedef struct HTentry *HTpointer;
 typedef struct HTentry {
 	int index;       // index of identifier in ST
 	HTpointer next;  // pointer to next identifier

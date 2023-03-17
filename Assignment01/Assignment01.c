@@ -163,8 +163,8 @@ void ReadID() {
 // ComputeHS
 
 void ComputeHS(int nid, int nfree){
-	int code int i;
-	code = 0;
+	int code = 0;
+	int i;
 	
 	for(i = nid; i < nfree - 1; i++)
 		code += (int)ST[i];

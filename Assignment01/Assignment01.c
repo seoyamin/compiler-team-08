@@ -103,6 +103,7 @@ void PrintHStable() {
 
 
 // PrintError
+
 void PrintError(ERRORtypes err){
 	switch(err){
 		case overst :
@@ -164,6 +165,8 @@ void ReadID() {
 void ComputeHS(int nid, int nfree){
 	int code int i;
 	code = 0;
+	
 	for(i = nid; i < nfree - 1; i++)
 		code += (int)ST[i];
 	hashcode = code % HTsize;
+}

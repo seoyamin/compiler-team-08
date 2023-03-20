@@ -225,7 +225,7 @@ int main()
 		SkipSeperators();
 		ReadID();
 		if (input != EOF && err != illid) {
-			if (nextfree = STsize) {
+			if (nextfree == STsize) {
 				err = overst;
 				PrintError(err);
 			}

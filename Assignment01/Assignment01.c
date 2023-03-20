@@ -46,7 +46,7 @@ char input;
 
 void initialize() {
 	fp = fopen(FILE_NAME, "r");
-	input = fget(fp);
+	input = fgetc(fp);
 }
 
 

@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define _CRT_SECURE_NO_WARNINGS
+
 #define FILE_NAME "testdata.txt"
 
 #define STsize 1000 // size of string table
@@ -10,20 +12,20 @@
 #define FALSE 0
 #define TRUE 1
 
-#define isLetter(x) ( ((x) >= 'a' && (x) <= 'z') || ((x) >= 'A' && (x) <= 'Z') )
-#define isDigit(x) ( (x) >= '0' && (x) <= '9' )
+#define isLetter(x) ( ((x) >= 'a' && (x) <= 'z') || ((x) >= 'A' && (x) <= 'Z') || x == '_' )
+#define isDigit(x) ( (x) >= '0' && (x) <= '9')
 
-typedef struct HTentry *HTpointer;
+typedef struct HTentry* HTpointer;
 typedef struct HTentry {
 	int index;       // index of identifier in ST
 	HTpointer next;  // pointer to next identifier
 } HTentry;
 
 
-enum errorTypes { noerror, illsp, illid, overst };
+enum errorTypes { noerror, illsp, illid, overst, overlen, illid2 };
 typedef enum errorTypes ERRORtypes;
 
-char seperators[] = ".,;:?!\t\n";
+char seperators[] = ".,;:?!\t \n";
 
 HTpointer HT[HTsize];
 char ST[STsize];
@@ -57,7 +59,7 @@ int isSeperator(char c) {
 	int sep_len;
 
 	sep_len = strlen(seperators);
-	
+
 	for (i = 0; i < sep_len; i++) {
 		if (c == seperators[i])
 			return 1;
@@ -97,40 +99,47 @@ void PrintHStable() {
 			}
 			printf("\n");
 		}
-		printf("\n\n\n < %5d characters are used in the string table > \n", nextfree);
+
 	}
+	printf("\n\n\n < %5d characters are used in the string table > \n", nextfree);
 }
 
 
 // PrintError
 
-void PrintError(ERRORtypes err){
-	switch(err){
-		case overst :
-			printf("...Error...		OVERFLOW");
-			PrintHStable();
-			exit(0);
-			break;
-		case illsp :
-			printf("...Error...		%c is illegal seperator \n", input);
-			break;
-		case illid :
-			printf("...Error... ");
-			while(input != EOF && (isLetter(input) || isDigit(input))){
-				printf("%c", input);
-				input = fgetc(fp);
-			}
-			printf("start with digit \n");
-			break;
+void PrintError(ERRORtypes err) {
+	switch (err) {
+	case overst:
+		printf("...Error...		OVERFLOW");
+		PrintHStable();
+		exit(0);
+		break;
+	case illsp:
+		printf("...Error...		%c is illegal seperator \n", input);
+		break;
+	case illid:
+		printf("...Error... ");
+		while (input != EOF && (isLetter(input) || isDigit(input))) {
+			printf("%c", input);
+			input = fgetc(fp);
+		}
+		printf(" start with digit \n");
+		break;
+	case overlen:
+		printf("...Error...       OVERLEN \n");
+		break;
+	case illid2:
+		printf("...Error...		~~ is not allowed \n");
+		break;
 	}
 }
 
 
 // Skip Seperators
 
-void SkipSeperators(){
-	while(input != EOF && !(isLetter(input) || isDigit(input))){
-		if(!isSeperator(input)){
+void SkipSeperators() {
+	while (input != EOF && !(isLetter(input) || isDigit(input))) {
+		if (!isSeperator(input)) {
 			err = illsp;
 			PrintError(err);
 		}
@@ -143,16 +152,19 @@ void SkipSeperators(){
 
 void ReadID() {
 	nextid = nextfree;
-	if(isDigit(input)){
+	if (isDigit(input)) {
 		err = illid;
 		PrintError(err);
 	}
-	else{
-		while(input != EOF && (isLetter(input) || isDigit(input))){
-			if(nextfree == STsize){
+	else {
+		// while (input != EOF && (isLetter(input) || isDigit(input))) {
+		while (input != EOF && !isSeperator(input)) {
+			if (nextfree == STsize) {
 				err = overst;
 				PrintError(err);
 			}
+			if (!(isLetter(input) || isDigit(input)))
+				err = illid2;
 			ST[nextfree++] = input;
 			input = fgetc(fp);
 		}
@@ -162,11 +174,11 @@ void ReadID() {
 
 // ComputeHS
 
-void ComputeHS(int nid, int nfree){
+void ComputeHS(int nid, int nfree) {
 	int code = 0;
 	int i;
-	
-	for(i = nid; i < nfree - 1; i++)
+
+	for (i = nid; i < nfree - 1; i++)
 		code += (int)ST[i];
 	hashcode = code % HTsize;
 }
@@ -224,13 +236,56 @@ int main()
 		err = noerror;
 		SkipSeperators();
 		ReadID();
-		if (input != EOF && err != illid) {
+		if (input != EOF && err != illid && err != illid2) {
 			if (nextfree == STsize) {
 				err = overst;
 				PrintError(err);
 			}
 			ST[nextfree++] = '\0';
 
+			err = noerror;
+			int len = nextfree - nextid - 1;
+
+			if (len > 10) {
+				err = overlen;
+				PrintError(err);
+				nextfree = nextid - 1;
+			}
+			else {
+				ComputeHS(nextid, nextfree);
+				LookupHS(nextid, hashcode);
+
+				if (!found) {
+					printf("%6d			", nextid);
+					for (i = nextid; i < nextfree - 1; i++)
+						printf("%c", ST[i]);
+					printf("		(entered)\n");
+					ADDHT(hashcode);
+				}
+				else {
+					printf("%6d			", sameid);
+					for (i = nextid; i < nextfree - 1; i++)
+						printf("%c", ST[i]);
+					printf("		(already existed)\n");
+					nextfree = nextid;
+				}
+			}
+		}
+		else if (input != EOF && err == illid2) {
+			if (nextfree == STsize) {
+				err = overst;
+				PrintError(err);
+			}
+			// printf("Illegal Identifier!");
+			for (int i = nextid; i < nextfree; i++) {
+				printf("%c", ST[i]);
+			}
+			PrintError(err);
+
+			nextfree = nextid + 1;
+			nextid = nextfree;
+		}
+		else if (input == EOF && err != illid) {
 			ComputeHS(nextid, nextfree);
 			LookupHS(nextid, hashcode);
 
@@ -250,5 +305,8 @@ int main()
 			}
 		}
 	}
-	PrintHStable();
+
+
+
+	//PrintHStable();
 }

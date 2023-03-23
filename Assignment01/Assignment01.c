@@ -6,7 +6,7 @@
 
 #define FILE_NAME "testdata.txt"
 
-#define STsize 1000 // size of string table
+#define STsize 1000   // size of string table
 #define HTsize 100  // size of hash table
 
 #define FALSE 0
@@ -105,6 +105,7 @@ void PrintHStable() {
 
 	}
 	printf("\n\n\n < %5d characters are used in the string table > \n", nextfree);
+	printf("\n\n1983024 √÷πŒ±≥, 2017007 ±ËπŒº≠, 2173109 ¡§¿∫∫Ò\n");
 }
 
 
@@ -162,6 +163,14 @@ void SkipSeperators() {
 		}
 		input = fgetc(fp);
 	}
+
+	//if (input == EOF && !(isLetter(input) || isDigit(input))) {
+	//	if (!isSeperator(input)) {
+	//		err = illsp;
+	//		PrintError(err);
+	//	}
+	//	//input = fgetc(fp);
+	//}
 }
 
 
@@ -260,7 +269,7 @@ void check() {
 		if (len > 10) {
 			err = overlen;
 			PrintError(err);
-			nextfree = nextid - 1;
+			nextfree = (nextid == 0) ? nextid : nextid - 1;
 		}
 
 		// [case 1-2] ¡§ªÛ
@@ -330,6 +339,4 @@ int main()
 	}
 
 	PrintHStable();
-
-	printf("\n\n1983024 √÷πŒ±≥, 2017007 ±ËπŒº≠, 2173109 ¡§¿∫∫Ò\n");
 }

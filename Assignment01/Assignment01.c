@@ -33,6 +33,8 @@ char ST[STsize];
 int nextid = 0;    // the current identifier 
 int nextfree = 0;  // the next available index of ST
 
+int illid2var = 0;
+
 int hashcode;      // hash code of identifier
 int sameid;        // first index of identifier
 
@@ -43,6 +45,7 @@ ERRORtypes err;
 FILE* fp;          // to be a pointer to FILE
 char input;
 
+int i;
 
 // Initialize - open input file
 
@@ -114,22 +117,36 @@ void PrintError(ERRORtypes err) {
 		PrintHStable();
 		exit(0);
 		break;
+
 	case illsp:
 		printf("...Error...		%c is illegal seperator \n", input);
 		break;
+
 	case illid:
-		printf("...Error... ");
+		printf("...Error...		");
 		while (input != EOF && (isLetter(input) || isDigit(input))) {
 			printf("%c", input);
 			input = fgetc(fp);
 		}
-		printf(" start with digit \n");
+		printf("		start with digit \n");
 		break;
+
 	case overlen:
-		printf("...Error...       OVERLEN \n");
+		printf("...Error...		");
+		for (i = nextid; i < nextfree; i++) {
+			printf("%c", ST[i]);
+		}
+		printf("		too long identifier \n");
 		break;
+
 	case illid2:
-		printf("...Error...		~~ is not allowed \n");
+		printf("...Error...		");
+		for (i = nextid; i < nextfree; i++) {
+			printf("%c", ST[i]);
+			if (!(isLetter(ST[i]) || isDigit(ST[i]))) illid2var = i;
+		}
+
+		printf("	%c is not allowed\n", ST[illid2var]);
 		break;
 	}
 }
@@ -224,68 +241,30 @@ void ADDHT(int hscode)
 	HT[hscode] = ptr;
 }
 
-// MAIN
 
-int main()
-{
-	int i;
-	PrintHeading();
-	initialize();
+// CHECK
+void check() {
 
-	while (input != EOF) {
-		err = noerror;
-		SkipSeperators();
-		ReadID();
-		if (input != EOF && err != illid && err != illid2) {
-			if (nextfree == STsize) {
-				err = overst;
-				PrintError(err);
-			}
-			ST[nextfree++] = '\0';
-
-			err = noerror;
-			int len = nextfree - nextid - 1;
-
-			if (len > 10) {
-				err = overlen;
-				PrintError(err);
-				nextfree = nextid - 1;
-			}
-			else {
-				ComputeHS(nextid, nextfree);
-				LookupHS(nextid, hashcode);
-
-				if (!found) {
-					printf("%6d			", nextid);
-					for (i = nextid; i < nextfree - 1; i++)
-						printf("%c", ST[i]);
-					printf("		(entered)\n");
-					ADDHT(hashcode);
-				}
-				else {
-					printf("%6d			", sameid);
-					for (i = nextid; i < nextfree - 1; i++)
-						printf("%c", ST[i]);
-					printf("		(already existed)\n");
-					nextfree = nextid;
-				}
-			}
-		}
-		else if (input != EOF && err == illid2) {
-			if (nextfree == STsize) {
-				err = overst;
-				PrintError(err);
-			}
-			// printf("Illegal Identifier!");
-			for (int i = nextid; i < nextfree; i++) {
-				printf("%c", ST[i]);
-			}
+	// [case 1] ¡§ªÛ or OVERLEN
+	if (err != illid && err != illid2) {
+		if (nextfree == STsize) {
+			err = overst;
 			PrintError(err);
-
-			nextfree = nextid + 1;
-			nextid = nextfree;
 		}
-		else if (input == EOF && err != illid) {
+		ST[nextfree++] = '\0';
+
+		err = noerror;
+		int len = nextfree - nextid - 1;
+
+		// [case 1-1] OVERLEN
+		if (len > 10) {
+			err = overlen;
+			PrintError(err);
+			nextfree = nextid - 1;
+		}
+
+		// [case 1-2] ¡§ªÛ
+		else {
 			ComputeHS(nextid, nextfree);
 			LookupHS(nextid, hashcode);
 
@@ -306,7 +285,51 @@ int main()
 		}
 	}
 
+	// [case 2] ILLID : start with digit
+	else if (err == illid) {
+		if (nextfree == STsize) {
+			err = overst;
+			PrintError(err);
+		}
+		// PrintError(err);
+
+	}
+
+	// [case 3] ILLID2 : NOT ALLOWED IDENTIFIER
+	else {
+		if (nextfree == STsize) {
+			err = overst;
+			PrintError(err);
+		}
+		PrintError(err);
+
+		nextfree = nextid + 1;
+		nextid = nextfree;
+	}
+}
 
 
-	//PrintHStable();
+// MAIN
+
+int main()
+{
+	PrintHeading();
+	initialize();
+
+	while (input != EOF) {
+		err = noerror;
+		SkipSeperators();
+		ReadID();
+
+		if (input == EOF) {
+			check();
+			break;
+		}
+
+		check();
+	}
+
+	PrintHStable();
+
+	printf("\n\n1983024 √÷πŒ±≥, 2017007 ±ËπŒº≠, 2173109 ¡§¿∫∫Ò\n");
 }

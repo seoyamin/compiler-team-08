@@ -4,7 +4,7 @@
 
 #define _CRT_SECURE_NO_WARNINGS
 
-#define FILE_NAME "testdata2.txt"
+#define FILE_NAME "testdata7.txt"
 
 #define STsize 1000   // size of string table
 #define HTsize 100  // size of hash table
@@ -105,7 +105,7 @@ void PrintHStable() {
 
 	}
 	printf("\n\n\n < %5d characters are used in the string table > \n", nextfree);
-	printf("\n\n1983024 �ֹα�, 2017007 ��μ�, 2173109 ������\n");
+	printf("\n\n1983024 최민교, 2017007 김민서, 2173109 정은비\n");
 }
 
 
@@ -247,15 +247,16 @@ void ADDHT(int hscode)
 void check() {
 
 	// [case 1] ���� or OVERLEN
-	if (input == EOF) ;
+	if (input == EOF && nextfree == nextid);
+	
 	else if (err != illid && err != illid2) {
 		if (nextfree == STsize) {
 			err = overst;
 			PrintError(err);
 		}
 		ST[nextfree++] = '\0';
-
 		err = noerror;
+
 		int len = nextfree - nextid - 1;
 
 		// [case 1-1] OVERLEN

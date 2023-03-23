@@ -4,7 +4,7 @@
 
 #define _CRT_SECURE_NO_WARNINGS
 
-#define FILE_NAME "testdata.txt"
+#define FILE_NAME "testdata2.txt"
 
 #define STsize 1000   // size of string table
 #define HTsize 100  // size of hash table
@@ -105,7 +105,7 @@ void PrintHStable() {
 
 	}
 	printf("\n\n\n < %5d characters are used in the string table > \n", nextfree);
-	printf("\n\n1983024 ÃÖ¹Î±³, 2017007 ±è¹Î¼­, 2173109 Á¤Àººñ\n");
+	printf("\n\n1983024 ï¿½Ö¹Î±ï¿½, 2017007 ï¿½ï¿½Î¼ï¿½, 2173109 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½\n");
 }
 
 
@@ -163,14 +163,6 @@ void SkipSeperators() {
 		}
 		input = fgetc(fp);
 	}
-
-	//if (input == EOF && !(isLetter(input) || isDigit(input))) {
-	//	if (!isSeperator(input)) {
-	//		err = illsp;
-	//		PrintError(err);
-	//	}
-	//	//input = fgetc(fp);
-	//}
 }
 
 
@@ -254,8 +246,9 @@ void ADDHT(int hscode)
 // CHECK
 void check() {
 
-	// [case 1] Á¤»ó or OVERLEN
-	if (err != illid && err != illid2) {
+	// [case 1] ï¿½ï¿½ï¿½ï¿½ or OVERLEN
+	if (input == EOF) ;
+	else if (err != illid && err != illid2) {
 		if (nextfree == STsize) {
 			err = overst;
 			PrintError(err);
@@ -272,7 +265,7 @@ void check() {
 			nextfree = (nextid == 0) ? nextid : nextid - 1;
 		}
 
-		// [case 1-2] Á¤»ó
+		// [case 1-2] ï¿½ï¿½ï¿½ï¿½
 		else {
 			ComputeHS(nextid, nextfree);
 			LookupHS(nextid, hashcode);

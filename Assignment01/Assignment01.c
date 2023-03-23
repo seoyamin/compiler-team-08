@@ -163,14 +163,6 @@ void SkipSeperators() {
 		}
 		input = fgetc(fp);
 	}
-
-	//if (input == EOF && !(isLetter(input) || isDigit(input))) {
-	//	if (!isSeperator(input)) {
-	//		err = illsp;
-	//		PrintError(err);
-	//	}
-	//	//input = fgetc(fp);
-	//}
 }
 
 
@@ -183,7 +175,6 @@ void ReadID() {
 		PrintError(err);
 	}
 	else {
-		// while (input != EOF && (isLetter(input) || isDigit(input))) {
 		while (input != EOF && !isSeperator(input)) {
 			if (nextfree == STsize) {
 				err = overst;
@@ -194,6 +185,7 @@ void ReadID() {
 			ST[nextfree++] = input;
 			input = fgetc(fp);
 		}
+
 	}
 }
 
@@ -253,9 +245,10 @@ void ADDHT(int hscode)
 
 // CHECK
 void check() {
+	if (input == EOF && nextid == nextfree);
 
 	// [case 1] Á¤»ó or OVERLEN
-	if (err != illid && err != illid2) {
+	else if (err != illid && err != illid2) {
 		if (nextfree == STsize) {
 			err = overst;
 			PrintError(err);
@@ -300,7 +293,6 @@ void check() {
 			err = overst;
 			PrintError(err);
 		}
-		// PrintError(err);
 
 	}
 

@@ -6,8 +6,8 @@
 
 #define FILE_NAME "testdata.txt"
 
-#define STsize 1000   // String Table(ST)ÀÇ size
-#define HTsize 100    // Hash Table(HT)ÀÇ size
+#define STsize 1000   // String Table(ST)ì˜ size
+#define HTsize 100    // Hash Table(HT)ì˜ size
 
 #define FALSE 0
 #define TRUE 1
@@ -17,12 +17,12 @@
 
 typedef struct HTentry* HTpointer;
 typedef struct HTentry {
-	int index;             // ST»ó¿¡¼­ identifierÀÇ ÀÎµ¦½º
-	HTpointer next;        // ´ÙÀ½ identifier¸¦ À§ÇÑ Æ÷ÀÎÅÍ
+	int index;             // STìƒì—ì„œ identifierì˜ ì¸ë±ìŠ¤
+	HTpointer next;        // ë‹¤ìŒ identifierë¥¼ ìœ„í•œ í¬ì¸í„°
 } HTentry;
 
 
-enum errorTypes { noerror, illsp, illid, overst, overlen, illid2 };   //  ¹ß»ı °¡´ÉÇÑ ¿¡·¯ Å¸ÀÔ (illid2´Â not allowed ¹®ÀÚ ¿¡·¯¸¦ ÀÇ¹Ì)
+enum errorTypes { noerror, illsp, illid, overst, overlen, illid2 };   //  ë°œìƒ ê°€ëŠ¥í•œ ì—ëŸ¬ íƒ€ì… (illid2ëŠ” not allowed ë¬¸ì ì—ëŸ¬ë¥¼ ì˜ë¯¸)
 typedef enum errorTypes ERRORtypes;
 
 char seperators[] = ".,;:?!\t \n";
@@ -33,22 +33,22 @@ char ST[STsize];
 int nextid = 0;     // the current identifier 
 int nextfree = 0;   // the next available index of ST
 
-int illid2var = 0;  // err = illid2 ÀÎ °æ¿ì Àß¸øµÈ ¹®ÀÚ°¡ µîÀåÇÑ ÀÎµ¦½º 
+int illid2var = 0;  // err = illid2 ì¸ ê²½ìš° ì˜ëª»ëœ ë¬¸ìê°€ ë“±ì¥í•œ ì¸ë±ìŠ¤ 
 
-int hashcode;       //  identifierÀÇ hashcode
-int sameid;         //  identifierÀÇ Ã¹¹øÂ° ÀÎµ¦½º
+int hashcode;       //  identifierì˜ hashcode
+int sameid;         //  identifierì˜ ì²«ë²ˆì§¸ ì¸ë±ìŠ¤
 
 int found;          // for the previous occurrence of an identifier
 
-ERRORtypes err;     // ¹ß»ıÇÑ ¿¡·¯ Å¸ÀÔ
+ERRORtypes err;     // ë°œìƒí•œ ì—ëŸ¬ íƒ€ì…
 
-FILE* fp;           // FILEÀÇ Æ÷ÀÎÅÍ
+FILE* fp;           // FILEì˜ í¬ì¸í„°
 char input;
 
 int i;
 
 
-// Initialize - input ÆÄÀÏÀ» ¿©´Â ÇÔ¼ö
+// Initialize - input íŒŒì¼ì„ ì—¬ëŠ” í•¨ìˆ˜
 
 void initialize() {
 	fp = fopen(FILE_NAME, "r");
@@ -56,7 +56,7 @@ void initialize() {
 }
 
 
-// is Seperator - seperatorÀÎÁö ¿©ºÎ¸¦ ÆÇ´ÜÇÏ´Â ÇÔ¼ö 
+// is Seperator - seperatorì¸ì§€ ì—¬ë¶€ë¥¼ íŒë‹¨í•˜ëŠ” í•¨ìˆ˜ 
 
 int isSeperator(char c) {
 	int i;
@@ -66,14 +66,14 @@ int isSeperator(char c) {
 
 	for (i = 0; i < sep_len; i++) {
 		if (c == seperators[i])
-			return 1;			// SeperatorÀÎ °æ¿ì
+			return 1;			// Seperatorì¸ ê²½ìš°
 	}
 
-	return 0;    //  Seperator°¡ ¾Æ´Ñ °æ¿ì
+	return 0;    //  Seperatorê°€ ì•„ë‹Œ ê²½ìš°
 }
 
 
-// PrintHeading - Heading(Index in ST, identifier)À» Ãâ·ÂÇÏ´Â ÇÔ¼ö
+// PrintHeading - Heading(Index in ST, identifier)ì„ ì¶œë ¥í•˜ëŠ” í•¨ìˆ˜
 
 void PrintHeading() {
 	printf("\n\n");
@@ -84,16 +84,16 @@ void PrintHeading() {
 }
 
 
-// PrintHStable - Hash TableÀ» Ãâ·ÂÇÏ´Â ÇÔ¼ö
+// PrintHStable - Hash Tableì„ ì¶œë ¥í•˜ëŠ” í•¨ìˆ˜
 
 void PrintHStable() {
 	int i, j;
 	HTpointer here;
 
-	// Heading Ãâ·Â
+	// Heading ì¶œë ¥
 	printf("\n\n\n\n\n [[ HASH TABLE ]] \n\n");
 
-	// Hash Table Ãâ·Â
+	// Hash Table ì¶œë ¥
 	for (i = 0; i < HTsize; i++) {
 		if (HT[i] != NULL) {
 			printf(" Hash Code %3d : ", i);
@@ -108,35 +108,35 @@ void PrintHStable() {
 
 	}
 
-	printf("\n\n\n < %5d characters are used in the string table > \n", nextfree);   // ST»óÀÇ characters ¼ö Ãâ·Â
-	printf("\n\n1983024 ÃÖ¹Î±³, 2017007 ±è¹Î¼­, 2173109 Á¤Àººñ\n");
+	printf("\n\n\n < %5d characters are used in the string table > \n", nextfree);   // STìƒì˜ characters ìˆ˜ ì¶œë ¥
+	printf("\n\n1983024 ìµœë¯¼êµ, 2017007 ê¹€ë¯¼ì„œ, 2173109 ì •ì€ë¹„\n");
 }
 
 
-// PrintError
+// PrintError - ì—ëŸ¬ì¼€ì´ìŠ¤ë³„ë¡œ Errorë¥¼ ì¶œë ¥í•˜ëŠ” í•¨ìˆ˜
 
 void PrintError(ERRORtypes err) {
 	switch (err) {
-	case overst:
+	case overst: // String Table ì‚¬ì´ì¦ˆê°€ ì˜¤ë²„í”Œë¡œìš°ì¸ ê²½ìš°
 		printf("...Error...		OVERFLOW");
 		PrintHStable();
-		exit(0);
+		exit(0); // ì¢…ë£Œ
 		break;
 
-	case illsp:
+	case illsp: // inputì´ illegal seperatorì¸ ê²½ìš° (ì‹œì‘ì´ ë¬¸ì, ìˆ«ì, seperatorê°€ ëª¨ë‘ ì•„ë‹Œ ê²½ìš°)
 		printf("...Error...		%c is illegal seperator \n", input);
 		break;
 
 	case illid:
-		printf("...Error...		");
+		printf("...Error...		"); // inputì´ illegal identifierì¸ ê²½ìš°
 		while (input != EOF && (isLetter(input) || isDigit(input))) {
 			printf("%c", input);
 			input = fgetc(fp);
 		}
-		printf("		start with digit \n");
+		printf("		start with digit \n"); // ìˆ«ìë¡œ ì‹œì‘
 		break;
 
-	case overlen:
+	case overlen: // identifierê°€ 10ì ì´ˆê³¼ì¸ ê²½ìš°
 		printf("...Error...		");
 		for (i = nextid; i < nextfree; i++) {
 			printf("%c", ST[i]);
@@ -144,20 +144,19 @@ void PrintError(ERRORtypes err) {
 		printf("		too long identifier \n");
 		break;
 
-	case illid2:
+	case illid2: // í—ˆìš©ë˜ì§€ ì•Šì€ ë¬¸ìê°€ ë‚˜íƒ€ë‚œ ê²½ìš° 
 		printf("...Error...		");
 		for (i = nextid; i < nextfree; i++) {
 			printf("%c", ST[i]);
 			if (!(isLetter(ST[i]) || isDigit(ST[i]))) illid2var = i;
 		}
-
 		printf("	%c is not allowed\n", ST[illid2var]);
 		break;
 	}
 }
 
 
-// Skip Seperators
+// Skip Seperators - Seperatorê°€ ë‚˜íƒ€ë‚¬ì„ ë•Œ ê·¸ Seperatorë¥¼ Skipí•˜ëŠ” í•¨ìˆ˜
 
 void SkipSeperators() {
 	while (input != EOF && !(isLetter(input) || isDigit(input))) {
@@ -170,22 +169,21 @@ void SkipSeperators() {
 }
 
 
-// ReadIO
+// ReadIO - inputì„ ì½ì–´ë‚˜ê°€ëŠ” í•¨ìˆ˜
 
-void ReadID() {
+void ReadIO() {
 	nextid = nextfree;
-	if (isDigit(input)) {
+	if (isDigit(input)) { // inputì´ ìˆ«ìì¼ ë•Œ
 		err = illid;
 		PrintError(err);
 	}
-	else {
-		// while (input != EOF && (isLetter(input) || isDigit(input))) {
-		while (input != EOF && !isSeperator(input)) {
+	else { // inputì´ ìˆ«ìê°€ ì•„ë‹ ë•Œ
+		while (input != EOF && !isSeperator(input)) { 
 			if (nextfree == STsize) {
 				err = overst;
 				PrintError(err);
 			}
-			if (!(isLetter(input) || isDigit(input)))
+			if (!(isLetter(input) || isDigit(input))) 
 				err = illid2;
 			ST[nextfree++] = input;
 			input = fgetc(fp);
@@ -194,7 +192,7 @@ void ReadID() {
 }
 
 
-// ComputeHS
+// ComputeHS - í•´ì‹œì½”ë“œ ê³„ì‚°í•˜ëŠ” í•¨ìˆ˜
 
 void ComputeHS(int nid, int nfree) {
 	int code = 0;
@@ -205,7 +203,7 @@ void ComputeHS(int nid, int nfree) {
 	hashcode = code % HTsize;
 }
 
-// LookupHs
+// LookupHs 
 
 void LookupHS(int nid, int hscode)
 {
@@ -250,10 +248,10 @@ void ADDHT(int hscode)
 // CHECK
 void check() {
 
-	// [case 1] ´õÀÌ»ó ÀĞÀ» ¹®ÀÚ°¡ ¾ø´Â °æ¿ì
+	// [case 1] ë”ì´ìƒ ì½ì„ ë¬¸ìê°€ ì—†ëŠ” ê²½ìš°
 	if (input == EOF && nextfree == nextid);
 
-	// [case 2] Á¤»ó or OVERLEN
+	// [case 2] ì •ìƒ or OVERLEN
 	else if (err != illid && err != illid2) {
 		if (nextfree == STsize) {
 			err = overst;
@@ -271,7 +269,7 @@ void check() {
 			nextfree = (nextid == 0) ? nextid : nextid - 1;
 		}
 
-		// [case 2-2] Á¤»ó
+		// [case 2-2] ì •ìƒ
 		else {
 			ComputeHS(nextid, nextfree);
 			LookupHS(nextid, hashcode);
@@ -326,7 +324,7 @@ int main()
 	while (input != EOF) {
 		err = noerror;
 		SkipSeperators();
-		ReadID();
+		ReadIO();
 
 		if (input == EOF) {
 			check();

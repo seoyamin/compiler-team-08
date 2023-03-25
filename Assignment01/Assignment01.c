@@ -107,6 +107,7 @@ void PrintHStable() {
 		}
 
 	}
+
 	printf("\n\n\n < %5d characters are used in the string table > \n", nextfree);   // ST상의 characters 수 출력
 	printf("\n\n1983024 최민교, 2017007 김민서, 2173109 정은비\n");
 }
@@ -249,9 +250,10 @@ void ADDHT(int hscode)
 // CHECK
 void check() {
 
-	// [case 1] 정상 or OVERLEN
+	// [case 1] 더이상 읽을 문자가 없는 경우
 	if (input == EOF && nextfree == nextid);
 
+	// [case 2] 정상 or OVERLEN
 	else if (err != illid && err != illid2) {
 		if (nextfree == STsize) {
 			err = overst;
@@ -262,14 +264,14 @@ void check() {
 
 		int len = nextfree - nextid - 1;
 
-		// [case 1-1] OVERLEN
+		// [case 2-1] OVERLEN
 		if (len > 10) {
 			err = overlen;
 			PrintError(err);
 			nextfree = (nextid == 0) ? nextid : nextid - 1;
 		}
 
-		// [case 1-2] 정상
+		// [case 2-2] 정상
 		else {
 			ComputeHS(nextid, nextfree);
 			LookupHS(nextid, hashcode);
@@ -291,17 +293,16 @@ void check() {
 		}
 	}
 
-	// [case 2] ILLID : start with digit
+	// [case 3] ILLID : start with digit
 	else if (err == illid) {
 		if (nextfree == STsize) {
 			err = overst;
 			PrintError(err);
 		}
-		// PrintError(err);
 
 	}
 
-	// [case 3] ILLID2 : NOT ALLOWED IDENTIFIER
+	// [case 4] ILLID2 : NOT ALLOWED IDENTIFIER
 	else {
 		if (nextfree == STsize) {
 			err = overst;

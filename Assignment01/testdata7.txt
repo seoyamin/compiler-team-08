@@ -1,0 +1,20 @@
+Hello :ewha Ewha!                          
+1886e abc a&b                      
+ewhaEwhaewhaEwhalongLong,   
+abc123!ewha                              
+ewha*asan
+
+
+
+
+
+Hello                                                 0
+ewha                                                  6
+Ewha                                                  11
+1886e                       (start with digit)        err
+abc                                                   16
+a&b                         (& is not allowed)        err
+ewhaEwhaewhaEwhalongLong    (too long identifier)     err
+abc123                                                20
+ewha                                                  6
+ewha*asan                   (* is not allowed)        err

@@ -6,8 +6,8 @@
 
 #define FILE_NAME "testdata.txt"
 
-#define STsize 1000   // size of string table
-#define HTsize 100  // size of hash table
+#define STsize 1000   // String Table(ST)의 size
+#define HTsize 100    // Hash Table(HT)의 size
 
 #define FALSE 0
 #define TRUE 1
@@ -17,12 +17,12 @@
 
 typedef struct HTentry* HTpointer;
 typedef struct HTentry {
-	int index;       // index of identifier in ST
-	HTpointer next;  // pointer to next identifier
+	int index;             // ST상에서 identifier의 인덱스
+	HTpointer next;        // 다음 identifier를 위한 포인터
 } HTentry;
 
 
-enum errorTypes { noerror, illsp, illid, overst, overlen, illid2 };
+enum errorTypes { noerror, illsp, illid, overst, overlen, illid2 };   //  발생 가능한 에러 타입 (illid2는 not allowed 문자 에러를 의미)
 typedef enum errorTypes ERRORtypes;
 
 char seperators[] = ".,;:?!\t \n";
@@ -30,24 +30,25 @@ char seperators[] = ".,;:?!\t \n";
 HTpointer HT[HTsize];
 char ST[STsize];
 
-int nextid = 0;    // the current identifier 
-int nextfree = 0;  // the next available index of ST
+int nextid = 0;     // the current identifier 
+int nextfree = 0;   // the next available index of ST
 
-int illid2var = 0;
+int illid2var = 0;  // err = illid2 인 경우 잘못된 문자가 등장한 인덱스 
 
-int hashcode;      // hash code of identifier
-int sameid;        // first index of identifier
+int hashcode;       //  identifier의 hashcode
+int sameid;         //  identifier의 첫번째 인덱스
 
-int found;         // for the previous occurrence of an identifie
+int found;          // for the previous occurrence of an identifier
 
-ERRORtypes err;
+ERRORtypes err;     // 발생한 에러 타입
 
-FILE* fp;          // to be a pointer to FILE
+FILE* fp;           // FILE의 포인터
 char input;
 
 int i;
 
-// Initialize - open input file
+
+// Initialize - input 파일을 여는 함수
 
 void initialize() {
 	fp = fopen(FILE_NAME, "r");
@@ -55,7 +56,7 @@ void initialize() {
 }
 
 
-// is Seperator - distinguish the seperator
+// is Seperator - seperator인지 여부를 판단하는 함수 
 
 int isSeperator(char c) {
 	int i;
@@ -65,14 +66,14 @@ int isSeperator(char c) {
 
 	for (i = 0; i < sep_len; i++) {
 		if (c == seperators[i])
-			return 1;
+			return 1;			// Seperator인 경우
 	}
 
-	return 0;
+	return 0;    //  Seperator가 아닌 경우
 }
 
 
-// print Heading
+// PrintHeading - Heading(Index in ST, identifier)을 출력하는 함수
 
 void PrintHeading() {
 	printf("\n\n");
@@ -83,14 +84,16 @@ void PrintHeading() {
 }
 
 
-// Print HS table
+// PrintHStable - Hash Table을 출력하는 함수
 
 void PrintHStable() {
 	int i, j;
 	HTpointer here;
 
+	// Heading 출력
 	printf("\n\n\n\n\n [[ HASH TABLE ]] \n\n");
 
+	// Hash Table 출력
 	for (i = 0; i < HTsize; i++) {
 		if (HT[i] != NULL) {
 			printf(" Hash Code %3d : ", i);
@@ -104,7 +107,7 @@ void PrintHStable() {
 		}
 
 	}
-	printf("\n\n\n < %5d characters are used in the string table > \n", nextfree);
+	printf("\n\n\n < %5d characters are used in the string table > \n", nextfree);   // ST상의 characters 수 출력
 	printf("\n\n1983024 최민교, 2017007 김민서, 2173109 정은비\n");
 }
 
@@ -175,6 +178,7 @@ void ReadID() {
 		PrintError(err);
 	}
 	else {
+		// while (input != EOF && (isLetter(input) || isDigit(input))) {
 		while (input != EOF && !isSeperator(input)) {
 			if (nextfree == STsize) {
 				err = overst;
@@ -185,7 +189,6 @@ void ReadID() {
 			ST[nextfree++] = input;
 			input = fgetc(fp);
 		}
-
 	}
 }
 
@@ -245,17 +248,18 @@ void ADDHT(int hscode)
 
 // CHECK
 void check() {
-	if (input == EOF && nextid == nextfree);
 
 	// [case 1] 정상 or OVERLEN
+	if (input == EOF && nextfree == nextid);
+
 	else if (err != illid && err != illid2) {
 		if (nextfree == STsize) {
 			err = overst;
 			PrintError(err);
 		}
 		ST[nextfree++] = '\0';
-
 		err = noerror;
+
 		int len = nextfree - nextid - 1;
 
 		// [case 1-1] OVERLEN
@@ -293,6 +297,7 @@ void check() {
 			err = overst;
 			PrintError(err);
 		}
+		// PrintError(err);
 
 	}
 

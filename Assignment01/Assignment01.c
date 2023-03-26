@@ -292,7 +292,7 @@ void check() {
 		}
 	}
 
-	// [case 3] ILLID : start with digit
+	// [case 3] identifier가 숫자로 시작하는 경우
 	else if (err == illid) {
 		if (nextfree == STsize) {
 			err = overst;
@@ -301,7 +301,7 @@ void check() {
 
 	}
 
-	// [case 4] ILLID2 : not allowed identifier
+	// [case 4] 허용되지 않는 identifier
 	else {
 		if (nextfree == STsize) {
 			err = overst;

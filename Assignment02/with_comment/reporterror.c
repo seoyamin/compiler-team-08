@@ -3,46 +3,46 @@
 #include <stdlib.h>
 #include "glob.h"
 
-// Letter, Digit ¿©ºÎ ÆÇ´Ü
+// Letter, Digit ì—¬ë¶€ íŒë‹¨
 #define isLetter(x) (((x) >= 'a' && (x) <='z') ||((x) >= 'A' && (x) <='Z') || ((x)=='_'))
 #define isDigit(x) (((x) >= '0' && (x) <='9'))
 
-// ¿¡·¯ Å¸ÀÔ enum
+// ì—ëŸ¬ íƒ€ìž… enum
 enum errortypes {
 	OVERLEN, ILLCHAR, ILLID
 };
 
-// reporterror - ¿¡·¯ÄÉÀÌ½º º°·Î Error¸¦ Ãâ·ÂÇÏ´Â ÇÔ¼ö
+// reporterror - ì—ëŸ¬ì¼€ì´ìŠ¤ ë³„ë¡œ Errorë¥¼ ì¶œë ¥í•˜ëŠ” í•¨ìˆ˜
 
 void reporterror(const char* input) {
 	cErrors++;
 	int len = strlen(input);
 
-	// error type ÆÇ´Ü
+	// error type íŒë‹¨
 	if (len > 10)
-		et = OVERLEN;				// [case 1] identifier°¡ 10ÀÚ ÃÊ°úÀÎ °æ¿ì -> overlen
-	else if (isDigit(input[0]))		// [case 2] ¼ýÀÚ·Î ½ÃÀÛÇÏ´Â °æ¿ì -> illid
+		et = OVERLEN;				// [case 1] identifierê°€ 10ìž ì´ˆê³¼ì¸ ê²½ìš° -> overlen
+	else if (isDigit(input[0]))		// [case 2] ìˆ«ìžë¡œ ì‹œìž‘í•˜ëŠ” ê²½ìš° -> illid
 		et = ILLID;
 	else 
-		et = ILLCHAR;				// [case 3] Æ¯¼ö¹®ÀÚ°¡ Á¸ÀçÇÏ´Â °æ¿ì -> illchar
+		et = ILLCHAR;				// [case 3] íŠ¹ìˆ˜ë¬¸ìžê°€ ì¡´ìž¬í•˜ëŠ” ê²½ìš° -> illchar
 	
 
-	printf("%d			**Error**					", linenum);
+	printf("%d		**Error**					", linenum);
 
-	// error message Ãâ·Â
+	// error message ì¶œë ¥
 	switch (et) {
 	case OVERLEN: 
-		printf("%s Too Long \n", input);
+		printf("%s TOO LONG \n", input);
 		break;
 	case ILLID: 
-		printf("%s Illegal IDENT \n", input);
+		printf("%s ILLEGAL IDENT \n", input);
 		break;
 	case ILLCHAR:
 		for (int i = 0; i < len; i++) {
 			if (!(isDigit(input[i]) || isLetter(input[i])))
-				printf("%c ", input[i]);	// illegal character Ãâ·Â
+				printf("%c ", input[i]);	// illegal character ì¶œë ¥
 		}
-		printf(" Illegal Character\n");
+		printf(" ILLEGAL CHARACTER \n");
 		break;
 	}
 }

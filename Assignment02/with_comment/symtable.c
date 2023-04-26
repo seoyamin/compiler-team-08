@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include "glob.h"
 
-#define STsize 1000		// String Table(ST)ÀÇ size
-#define HTsize 100		// Hash Table(HT)ÀÇ size
+#define STsize 1000		// String Table(ST)ì˜ size
+#define HTsize 100		// Hash Table(HT)ì˜ size
 
 #define FALSE 0
 #define TRUE 1
@@ -12,15 +12,15 @@
 int nextid;				// the current identifier 
 int nextfree;			// the next available index of ST
 
-int hashcode;			//  identifierÀÇ hashcode
-int sameid;				//  identifierÀÇ Ã¹¹øÂ° ÀÎµ¦½º
+int hashcode;			//  identifierì˜ hashcode
+int sameid;				//  identifierì˜ ì²«ë²ˆì§¸ ì¸ë±ìŠ¤
 
 int found;				// for the previous occurrence of an identifier
 
 typedef struct HTentry* HTpointer;
 typedef struct HTentry {
-	int index;             // ST»ó¿¡¼­ identifierÀÇ ÀÎµ¦½º
-	HTpointer next;        // ´ÙÀ½ identifier¸¦ À§ÇÑ Æ÷ÀÎÅÍ
+	int index;             // STìƒì—ì„œ identifierì˜ ì¸ë±ìŠ¤
+	HTpointer next;        // ë‹¤ìŒ identifierë¥¼ ìœ„í•œ í¬ì¸í„°
 } HTentry;
 
 HTpointer HT[HTsize];
@@ -30,7 +30,7 @@ nextid = 0;
 nextfree = 0;
 currid = 0;
 
-// ComputeHS - ÇØ½ÃÄÚµå °è»êÇÏ´Â ÇÔ¼ö
+// ComputeHS - í•´ì‹œì½”ë“œ ê³„ì‚°í•˜ëŠ” í•¨ìˆ˜
 void ComputeHS(int nid, int nfree) {
 	int code = 0;
 	int i;
@@ -41,56 +41,57 @@ void ComputeHS(int nid, int nfree) {
 }
 
 
-// LookupHs - Hash TableÀ» º¸°í ÇöÀç ÀĞ¾îµéÀÎ identifierÀÇ Á¸Àç ¿©ºÎ¸¦ ÆÇ´ÜÇÏ´Â ÇÔ¼ö
+// LookupHs - Hash Tableì„ ë³´ê³  í˜„ì¬ ì½ì–´ë“¤ì¸ identifierì˜ ì¡´ì¬ ì—¬ë¶€ë¥¼ íŒë‹¨í•˜ëŠ” í•¨ìˆ˜
 
 void LookupHS(int nid, int hscode)
 {
 	HTpointer here;
 	int i, j;
-	found = FALSE; 	// Hash TableÀ» ÀĞ±â Àü, FALSE·Î ÃÊ±âÈ­
+	found = FALSE; 	// Hash Tableì„ ì½ê¸° ì „, FALSEë¡œ ì´ˆê¸°í™”
 
-	// hash code À§Ä¡¿¡ ¾î¶°ÇÑ ¹®ÀÚ¶óµµ Á¸ÀçÇÏ´Â °æ¿ì
+	// hash code ìœ„ì¹˜ì— ì–´ë– í•œ ë¬¸ìë¼ë„ ì¡´ì¬í•˜ëŠ” ê²½ìš°
 	if (HT[hscode] != NULL) {  
 		here = HT[hscode];
-		while (here != NULL && found == FALSE) {		// ÇöÀç °¡¸®Å°´Â À§Ä¡¿¡ ¹®ÀÚ°¡ ÀÖ°í ¾ÆÁ÷ identifier°¡ ¹ß°ßµÇÁö ¾ÊÀº °æ¿ì
+		while (here != NULL && found == FALSE) {		// í˜„ì¬ ê°€ë¦¬í‚¤ëŠ” ìœ„ì¹˜ì— ë¬¸ìê°€ ìˆê³  ì•„ì§ identifierê°€ ë°œê²¬ë˜ì§€ ì•Šì€ ê²½ìš°
 			found = TRUE;
 			i = here->index;
 			j = nid;
 			sameid = i;
 
-			while (ST[i] != '\0' && found == TRUE) {	// ¹®ÀÚ¸¦ ÇÏ³ª¾¿ ºñ±³ÇÏ¸é¼­ identifierÀÇ ÀÏÄ¡ ¿©ºÎ ÆÇ´Ü
+			while (ST[i] != '\0' && found == TRUE) {	// ë¬¸ìë¥¼ í•˜ë‚˜ì”© ë¹„êµí•˜ë©´ì„œ identifierì˜ ì¼ì¹˜ ì—¬ë¶€ íŒë‹¨
 
-				// identifier¿Í ÀÏÄ¡ÇÏÁö ¾Ê´Â ¹®ÀÚÀÎ °æ¿ì
+				// identifierì™€ ì¼ì¹˜í•˜ì§€ ì•ŠëŠ” ë¬¸ìì¸ ê²½ìš°
 				if (ST[i] != ST[j])		
 					found = FALSE;
 
-				// identifier¿Í ÀÏÄ¡ÇÏ´Â ¹®ÀÚÀÎ °æ¿ì
+				// identifierì™€ ì¼ì¹˜í•˜ëŠ” ë¬¸ìì¸ ê²½ìš°
 				else {					
 					i++;
 					j++;
 					currid = here->index;
 				}
 			}
-			here = here->next;  // linked listÀÇ ´ÙÀ½ identifier·Î ÀÌµ¿
+			here = here->next;  // linked listì˜ ë‹¤ìŒ identifierë¡œ ì´ë™
 		}
 	}
 }
 
 
-// ADDHT - Hash Table¿¡ identifier¸¦ Ãß°¡ÇÏ´Â ÇÔ¼ö
+// ADDHT - Hash Tableì— identifierë¥¼ ì¶”ê°€í•˜ëŠ” í•¨ìˆ˜
 
 void ADDHT(int hscode)
 {
 	HTpointer ptr;
 
 	ptr = (HTpointer)malloc(sizeof(ptr));
+	currid = nextid;
 	ptr->index = nextid;
 	ptr->next = HT[hscode];
-	HT[hscode] = ptr;			// linked list·Î½á identifier »ğÀÔ
+	HT[hscode] = ptr;			// linked listë¡œì¨ identifier ì‚½ì…
 }
 
 
-// SymbolTable - identifier¸¦ ÀÌ¿ëÇÏ¿© hashcode¸¦ °è»êÇÏ°í, ±× °ªÀ» Hash Table¿¡ ÀúÀåÇÏ´Â ÇÔ¼ö
+// SymbolTable - identifierë¥¼ ì´ìš©í•˜ì—¬ hashcodeë¥¼ ê³„ì‚°í•˜ê³ , ê·¸ ê°’ì„ Hash Tableì— ì €ì¥í•˜ëŠ” í•¨ìˆ˜
 void SymbolTable(const char* identifier)
 {	
 	nextfree += strlen(identifier) + 1;
@@ -102,13 +103,13 @@ void SymbolTable(const char* identifier)
 	
 	currid = nextid;
 	
-	ComputeHS(nextid, nextfree);	// hash code °è»ê
-	LookupHS(nextid, hashcode);		// Hash Table¿¡ ÇöÀç identifier°¡ ÀúÀåµÇ¾î ÀÖ´ÂÁö ÆÇ´Ü
+	ComputeHS(nextid, nextfree);	// hash code ê³„ì‚°
+	LookupHS(nextid, hashcode);		// Hash Tableì— í˜„ì¬ identifierê°€ ì €ì¥ë˜ì–´ ìˆëŠ”ì§€ íŒë‹¨
 	
-	if (!found) {					// [case 1] HT¿¡ ÀúÀåµÈ ÀÌ·Â ¾ø´Â °æ¿ì - ÀúÀå
+	if (!found) {					// [case 1] HTì— ì €ì¥ëœ ì´ë ¥ ì—†ëŠ” ê²½ìš° - ì €ì¥
 		ADDHT(hashcode); 
 	}
-	else {							// [case 2] HT¿¡ ÀúÀåµÈ ÀÌ·Â ÀÖ´Â °æ¿ì
+	else {							// [case 2] HTì— ì €ì¥ëœ ì´ë ¥ ìˆëŠ” ê²½ìš°
 		nextfree = nextid; 
 	}
 	nextid = nextfree;

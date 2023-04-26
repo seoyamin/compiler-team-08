@@ -1,5 +1,5 @@
 /*
-* main.c - 각 token에 대한 출력을 하는 메인 함수
+* main.c - 각 token에 대한 정보를 출력
 * programmer – 김민서, 정은비, 최민교
 * date – 26/04/2023 
 */

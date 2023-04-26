@@ -8,97 +8,90 @@ extern ComputeHS();
 extern LookupHS();
 extern char* yytext;
 
-unsigned int cErrors = 0;       // ¹ß»ıÇÑ ¿¡·¯ÀÇ È½¼ö
-unsigned int linenum = 1;       // Ãâ·ÂÀ» À§ÇÑ Line Number
+unsigned int cErrors = 0;       // ë°œìƒí•œ ì—ëŸ¬ì˜ íšŸìˆ˜
+unsigned int linenum = 1;       // ì¶œë ¥ì„ ìœ„í•œ Line Number
 
 
-// printtoken - ÅäÅ« Á¤º¸¸¦ Ãâ·ÂÇÏ´Â ÇÔ¼ö
+// printtoken - í† í° ì •ë³´ë¥¼ ì¶œë ¥í•˜ëŠ” í•¨ìˆ˜
 
 void printtoken(enum tokentypes tn) {
 
-	// Line number Ãâ·Â
+	// Line number ì¶œë ¥
 	printf("%d		", linenum);
 
-	// Token Type Ãâ·Â
+	// Token Type ì¶œë ¥
 	switch (tn){
-		case TCONST: printf("const				"); break;
-		case TELSE: printf("else 				"); break;
-		case TIF: printf("if 				");	break;
-		case TINT: printf("int 				");	break;
-		case TRETURN: printf("return 				"); break;
-		case TVOID: printf("void 				"); break;
-		case TWHILE: printf("while 				"); break;
-
-		case TADD: printf("add 				"); break;
-		case TSUB: printf("subtract				"); break;
-		case TMUL: printf("multiplication				"); break;
-		case TDIV: printf("divide				"); break;
-		case TMOD: printf("modulo				"); break;
-
-		case TASSIGN: printf("assign				"); break;
-		case TADDASSIGN: printf("add assign				"); break;
-		case TSUBASSIGN: printf("subtract assign				"); break;
-		case TMULASSIGN: printf("multiply assign				"); break;
-		case TDIVASSIGN: printf("divide assign					"); break;
-		case TMODASSIGN: printf("modulo assign				"); break;
-
-		case TNOT: printf("not				");	break;
-		case TAND: printf("and				"); break;
-		case TOR: printf("or				");  break;
-
-		case TEQUAL: printf("equal to 				"); break;
-		case TNOTEQU: printf("not equal to 				"); break;
-		case TLESS: printf("less than				"); break;
-		case TGREAT: printf("greater than 				"); break;
-		case TLESSE: printf("less than or equal to 				"); break;
-		case TGREATE: printf("greater than or eual to 				"); break;
-
-		case TINC: printf("increase				"); break;
-		case TDEC: printf("decrease				"); break;
-		
-		case TLEFTPAR: printf("left parenthesis				"); break;
-		case TRIGHTPAR: printf("right parenthesis				"); break;
-		case TLEFTBRACE: printf("left brace 				"); break;
-		case TRIGHTBRACE: printf("right brace 				"); break;
-		case TLEFTBRACKET: printf("left bracket				"); break;
-		case TRIGHTBRACKET: printf("right bracket 					"); break;
-
-		case TSEMI: printf("semicolon 				"); break;
-		case TCOLON: printf("colon 				"); break;
-	
-		case TIDENT: printf("ident			%d			", currid); break;	  // IdentifierÀÎ °æ¿ì ST-indexµµ Ãâ·Â
-		case TNUMBER: printf("number					"); break;
+		case TCONST: printf("const\t\t\t"); break;
+		case TELSE: printf("else\t\t\t"); break;
+		case TIF: printf("if\t\t\t");	break;
+		case TINT: printf("int\t\t\t");	break;
+		case TRETURN: printf("return\t\t\t"); break;
+		case TVOID: printf("void\t\t\t"); break;
+		case TWHILE: printf("while\t\t\t"); break;
+		case TADD: printf("add\t\t\t"); break;
+		case TSUB: printf("subtract\t\t"); break;
+		case TMUL: printf("multiply\t\t"); break;
+		case TDIV: printf("divide\t\t\t"); break;
+		case TMOD: printf("modulo\t\t\t"); break;
+		case TASSIGN: printf("assign\t\t\t"); break;
+		case TADDASSIGN: printf("add assign\t\t"); break;
+		case TSUBASSIGN: printf("subtract assign\t\t"); break;
+		case TMULASSIGN: printf("multiply assign\t\t"); break;
+		case TDIVASSIGN: printf("divide assign\t\t"); break;
+		case TMODASSIGN: printf("modulo assign\t\t"); break;
+		case TNOT: printf("not\t\t\t"); break;
+		case TAND: printf("and\t\t\t"); break;
+		case TOR: printf("or\t\t\t");  break;
+		case TEQUAL: printf("equal to\t\t"); break;
+		case TNOTEQU: printf("not equal to\t\t"); break;
+		case TLESS: printf("less than\t\t"); break;
+		case TGREAT: printf("greater than\t\t"); break;
+		case TLESSE: printf("less than or equal to\t"); break;
+		case TGREATE: printf("greater than or equal to"); break;
+		case TINC: printf("increase\t\t"); break;
+		case TDEC: printf("decrease\t\t"); break;
+		case TLEFTPAR: printf("left parenthesis\t"); break;
+		case TRIGHTPAR: printf("right parenthesis\t"); break;
+		case TLEFTBRACE: printf("left brace\t\t"); break;
+		case TRIGHTBRACE: printf("right brace\t\t"); break;
+		case TLEFTBRACKET: printf("left bracket\t\t"); break;
+		case TRIGHTBRACKET: printf("right bracket\t\t"); break;
+		case TSEMI: printf("semicolon\t\t"); break;
+		case TCOLON: printf("colon\t\t\t"); break;
+		case TIDENT: printf("ident			 %d", currid); break;	  // Identifierì¸ ê²½ìš° ST-indexë„ ì¶œë ¥
+		case TNUMBER: printf("number\t\t\t\t\t\t"); break;
 	}
 
-	// Identifier È¤Àº ¼ıÀÚÀÎ °æ¿ì Token °ª Ãâ·Â
+	// Token ê°’ ì¶œë ¥
 	if (tn == TNUMBER)
-		printf("%d \n", atoi(yytext)); 
+		printf("%d \n", atoi(yytext));
+	else if (tn == TIDENT)
+		printf("\t\t\t%s \n", yytext);
 	else
-		printf("%s \n", yytext);
-	
+		printf("\t\t\t%s \n", yytext);
 }
 
 
-// main ÇÔ¼ö 
+// main í•¨ìˆ˜ 
 
 void main()
 {
-	enum tokentypes tn;  // ÅäÅ« Å¸ÀÔ
+	enum tokentypes tn;  // í† í° íƒ€ì…
 	
-	// Çì´õ Ãâ·Â (Line number, Token Type, ST-index, Token)
-	printf("Line number	Token type	ST-index	Token\n");
+	// í—¤ë” ì¶œë ¥ (Line number, Token Type, ST-index, Token)
+	printf("Line number	Token type		 ST-index	        Token\n");
 
-	// ¿¡·¯°¡ ¾Æ´Ñ °æ¿ì, Token Á¤º¸ Ãâ·Â
+	// ì—ëŸ¬ê°€ ì•„ë‹Œ ê²½ìš°, Token ì •ë³´ ì¶œë ¥
 	while ((tn = yylex()) != TEOF) {
 		if (tn != TERROR)
 			printtoken(tn);
 	}
 
-	// Error µîÀå È½¼ö Ãâ·Â
+	// Error ë“±ì¥ íšŸìˆ˜ ì¶œë ¥
 	if (cErrors == 0)
-		printf("No errors detected ");
-	else printf("%d errors detected", cErrors);
+		printf("\nNo errors detected ");
+	else printf("\n%d errors detected", cErrors);
 	
-	// ÇĞ¹ø Ãâ·Â
+	// í•™ë²ˆ ì¶œë ¥
 	printf("\n\n[1983024 Choi mingyo, 2017007 Kim minseo, 2173109 Jeong Eunbi]\n");
 }

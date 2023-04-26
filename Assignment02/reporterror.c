@@ -1,28 +1,33 @@
+/*
+* reporterror.c - ê° tokenì— ëŒ€í•œ error ë©”ì‹œì§€ ì¶œë ¥
+* programmer - ê¹€ë¯¼ì„œ, ì •ì€ë¹„, ìµœë¯¼êµ
+* date - 04/26/2023
+*/
 #include <stdio.h>
-// PrintError - ¿¡·¯ÄÉÀÌ½ºº°·Î Error¸¦ Ãâ·ÂÇÏ´Â ÇÔ¼ö
 
+// PrintError - ì—ëŸ¬ì¼€ì´ìŠ¤ë³„ë¡œ Errorë¥¼ ì¶œë ¥í•˜ëŠ” í•¨ìˆ˜
 void PrintError(ERRORtypes err) {
 	switch (err) {
-	case overst: // String Table »çÀÌÁî°¡ ¿À¹öÇÃ·Î¿ìÀÎ °æ¿ì
+	case overst: // String Table ì‚¬ì´ì¦ˆê°€ ì˜¤ë²„í”Œë¡œìš°ì¸ ê²½ìš°
 		printf("...Error...		OVERFLOW");
 		PrintHStable();
-		exit(0); // Á¾·á
+		exit(0); // ì¢…ë£Œ
 		break;
 
-	case illsp: // inputÀÌ illegal seperatorÀÎ °æ¿ì (½ÃÀÛÀÌ ¹®ÀÚ, ¼ıÀÚ, seperator°¡ ¸ğµÎ ¾Æ´Ñ °æ¿ì)
+	case illsp: // inputì´ illegal seperatorì¸ ê²½ìš° (ì‹œì‘ì´ ë¬¸ì, ìˆ«ì, seperatorê°€ ëª¨ë‘ ì•„ë‹Œ ê²½ìš°)
 		printf("...Error...		%c is illegal seperator \n", input);
 		break;
 
 	case illid:
-		printf("...Error...		"); // inputÀÌ illegal identifierÀÎ °æ¿ì
+		printf("...Error...		"); // inputì´ illegal identifierì¸ ê²½ìš°
 		while (input != EOF && (isLetter(input) || isDigit(input))) {
 			printf("%c", input);
 			input = fgetc(fp);
 		}
-		printf("		start with digit \n"); // ¼ıÀÚ·Î ½ÃÀÛ
+		printf("		start with digit \n"); // ìˆ«ìë¡œ ì‹œì‘
 		break;
 
-	case overlen: // identifier°¡ 10ÀÚ ÃÊ°úÀÎ °æ¿ì
+	case overlen: // identifierê°€ 10ì ì´ˆê³¼ì¸ ê²½ìš°
 		printf("...Error...		");
 		for (i = nextid; i < nextfree; i++) {
 			printf("%c", ST[i]);
@@ -30,7 +35,7 @@ void PrintError(ERRORtypes err) {
 		printf("		too long identifier \n");
 		break;
 
-	case illid2: // Çã¿ëµÇÁö ¾ÊÀº ¹®ÀÚ°¡ ³ªÅ¸³­ °æ¿ì 
+	case illid2: // í—ˆìš©ë˜ì§€ ì•Šì€ ë¬¸ìê°€ ë‚˜íƒ€ë‚œ ê²½ìš° 
 		printf("...Error...		");
 		for (i = nextid; i < nextfree; i++) {
 			printf("%c", ST[i]);

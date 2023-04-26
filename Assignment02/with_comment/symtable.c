@@ -1,3 +1,9 @@
+/*
+* symtable.c – 해시코드를 계산하고 존재유무를 판단하여 ST에 identifier 삽입
+* progrmmer – 김민서, 정은비, 최민교
+* date - 04/26/2023
+*/
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>

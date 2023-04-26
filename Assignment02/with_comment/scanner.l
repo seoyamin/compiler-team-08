@@ -1,4 +1,9 @@
 %{
+/*
+* scanner.l - Modified MiniCÎ•º ÏúÑÌïú Lexical Analyzer
+* programmer - ÍπÄÎØºÏÑú, Ï†ïÏùÄÎπÑ, ÏµúÎØºÍµê
+* date - 04/26/2023
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include "tn.h" 
@@ -8,9 +13,6 @@ extern reporterror();
 %}
 letter [a-zA-Z_]
 digit [0-9]
-op "+" | "+="
-operator "+"|"-"|"*"|"/"|"%"|"+="|"-="|"*="|"/="|"%="|"!"|"&&"|"||"|"=="|"!="|"<"|">"|"<="|">="|"++"|"--" 
-ssymbol "(" | ")" | "," | "{" | "}" | "[" | "]" | "|" | ";"
 %%
 "const"   return(TCONST); 
 "else"    return(TELSE);
@@ -19,55 +21,55 @@ ssymbol "(" | ")" | "," | "{" | "}" | "[" | "]" | "|" | ";"
 "return"  return(TRETURN);
 "void"    return(TVOID);
 "while"   return(TWHILE);
-"+"		  return(TADD);
-"-"		  return(TSUB);
-"*"		  return(TMUL);
-"/"		  return(TDIV);
-"%"		  return(TMOD);
-"="		  return(TASSIGN);
+"+"	  return(TADD);
+"-"	  return(TSUB);
+"*"	  return(TMUL);
+"/"	  return(TDIV);
+"%"       return(TMOD);
+"="	  return(TASSIGN);
 "+="      return(TADDASSIGN);
 "-="      return(TSUBASSIGN);
 "*="      return(TMULASSIGN);
 "/="      return(TDIVASSIGN);
 "%="      return(TMODASSIGN);
-"!"		  return(TNOT);
+"!"	  return(TNOT);
 "&&"      return(TAND);
 "||"      return(TOR);
 "=="      return(TEQUAL);
 "!="      return(TNOTEQU);
-"<"		  return(TLESS);
-">"		  return(TGREAT);
+"<"       return(TLESS);
+">"       return(TGREAT);
 "<="      return(TLESSE);
 ">="      return(TGREATE);
 "++"      return(TINC);
 "--"      return(TDEC);
-"("		  return(TLEFTPAR);
-")"		  return(TRIGHTPAR);
-","		  return(TCOLON);
-"{"		  return(TLEFTBRACE);
-"}"		  return(TRIGHTBRACE);
-"["		  return(TLEFTBRACKET);
-"]"		  return(TRIGHTBRACKET);
-";"		  return(TSEMI);
+"("       return(TLEFTPAR);
+")"	  return(TRIGHTPAR);
+","	  return(TCOLON);
+"{"	  return(TLEFTBRACE);
+"}"	  return(TRIGHTBRACE);
+"["	  return(TLEFTBRACKET);
+"]"	  return(TRIGHTBRACKET);
+";"	  return(TSEMI);
 "\n"	  linenum = linenum + 1;
-{letter}({letter}|{digit})*   { if (yyleng <= 10) {			// ¡§ªÛ identifier
+{letter}({letter}|{digit})*   { if (yyleng <= 10) {			// Ï†ïÏÉÅ identifier
 									SymbolTable(yytext);		
 									return(TIDENT); 
 								}
-								else {						// ø°∑Ø πﬂª˝ (OVERLEN)
+								else {						// ÏóêÎü¨ Î∞úÏÉù (OVERLEN)
 									reporterror(yytext);
 									return(TERROR);    
 								}
 							  } 
 {digit}+   return(TNUMBER);
 {digit}+{letter}*	{
-						reporterror(yytext);	// ø°∑Ø πﬂª˝ (ILLIDENT)
+						reporterror(yytext);	// ÏóêÎü¨ Î∞úÏÉù (ILLIDENT)
 						return(TERROR);  
 					}
 "//".*     ;
 [ \t]      ;
 .            {
-				reporterror(yytext);		// ø°∑Ø πﬂª˝ (ILLCHAR)
+				reporterror(yytext);		// ÏóêÎü¨ Î∞úÏÉù (ILLCHAR)
 				return(TERROR);    
 			 }
 %%

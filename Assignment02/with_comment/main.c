@@ -1,3 +1,9 @@
+/*
+* main.c - 각 token에 대한 출력을 하는 메인 함수
+* programmer – 김민서, 정은비, 최민교
+* date – 26/04/2023 
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "tn.h"

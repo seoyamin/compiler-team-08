@@ -1,3 +1,9 @@
+/*
+* reporterror.c - 각 token에 대한 error 메시지 출력
+* programmer - 김민서, 정은비, 최민교
+* date - 04/26/2023
+*/
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>

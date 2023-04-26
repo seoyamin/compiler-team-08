@@ -1,6 +1,6 @@
 /*
 * symtable.c – 해시코드 계산함으로써 해당 identifier이 ST에 존재하는지 판단하고 ST에 identifier 삽입
-* progrmmer – 김민서, 정은비, 최민교
+* programmer – 김민서, 정은비, 최민교
 * date - 04/26/2023
 */
 

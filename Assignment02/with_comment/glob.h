@@ -1,6 +1,11 @@
+/*
+* glob.h â€“  í”„ë¡œì íŠ¸ì˜ ì „ì—­ ë³€ìˆ˜ë“¤
+* progrmmer â€“ ê¹€ë¯¼ì„œ, ì •ì€ë¹„, ìµœë¯¼êµ
+* date - 26/04/2023
+*/
 extern int currid;				// the current identifier 
 extern unsigned int linenum;	// line number
-extern unsigned int cErrors;	// µîÀåÇÑ ¿¡·¯ È½¼ö
+extern unsigned int cErrors;	// ë“±ì¥í•œ ì—ëŸ¬ íšŸìˆ˜
 
-enum errortypes;				// ¿¡·¯ Å¸ÀÔ enum 
+enum errortypes;				// ì—ëŸ¬ íƒ€ì… enum 
 enum errortypes et;

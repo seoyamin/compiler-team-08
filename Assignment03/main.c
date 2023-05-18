@@ -15,7 +15,7 @@ extern LookupHS();
 extern char* yytext;
 
 unsigned int cErrors = 0;       // 발생한 에러의 횟수
-unsigned int linenum = 1;       // 출력을 위한 Line Number
+unsigned int currlinenum = 1;       // 현재 토큰이 선언된 위치의 line number
 
 
 // printtoken - 토큰 정보를 출력하는 함수
@@ -23,7 +23,7 @@ unsigned int linenum = 1;       // 출력을 위한 Line Number
 void printtoken(enum tokentypes tn) {
 
 	// Line number 출력
-	printf("%d		", linenum);
+	printf("%d		", currlinenum);
 
 	// Token Type 출력
 	switch (tn){

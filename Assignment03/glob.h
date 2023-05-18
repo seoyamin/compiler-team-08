@@ -4,7 +4,7 @@
 * date - 26/04/2023
 */
 extern int currid;				// the current identifier 
-extern unsigned int linenum;	// line number
+extern unsigned int currlinenum;	// current line number
 extern unsigned int cErrors;	// 등장한 에러 횟수
 
 enum errortypes;				// 에러 타입 enum 

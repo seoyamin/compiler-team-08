@@ -71,8 +71,6 @@ void printtoken(enum tokentypes tn) {
 	// Token 값 출력
 	if (tn == TNUMBER)
 		printf("%d \n", atoi(yytext));
-	else if (tn == TIDENT)
-		printf("\t\t\t%s \n", yytext);
 	else
 		printf("\t\t\t%s \n", yytext);
 }

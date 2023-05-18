@@ -28,6 +28,7 @@ typedef struct HTentry {
 	int index;             // ST상에서 identifier의 인덱스
 	HTpointer next;        // 다음 identifier를 위한 포인터
 	char type[50];	       // identifier의 속성
+	int linenum;		// EB: identifier의 linenum (We should add the initialization code for this variable.)
 } HTentry;
 
 HTpointer HT[HTsize];

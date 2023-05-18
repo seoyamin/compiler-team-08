@@ -95,6 +95,7 @@ void ADDHT(int hscode)
 	currid = nextid;
 	ptr->index = nextid;
 	ptr->next = HT[hscode];
+	ptr->linenum = currlinenum;		// EB: identifier가 선언된 위치의 line number 
 	HT[hscode] = ptr;			// linked list로써 identifier 삽입
 }
 

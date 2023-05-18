@@ -27,6 +27,7 @@ typedef struct HTentry* HTpointer;
 typedef struct HTentry {
 	int index;             // ST상에서 identifier의 인덱스
 	HTpointer next;        // 다음 identifier를 위한 포인터
+	char type[50];	       // identifier의 속성
 } HTentry;
 
 HTpointer HT[HTsize];

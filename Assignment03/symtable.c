@@ -114,6 +114,7 @@ void PrintHStable() {
 				j = here->index;
 				while (ST[j] != '\0' && j < STsize)
 					printf("%c", ST[j++]);
+				printf("\t(%s, line %d)\n", here->type, here->linenum);
 				printf("    ");
 			}
 			printf("\n");

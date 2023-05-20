@@ -99,14 +99,36 @@ void ADDHT(int hscode)
 	HT[hscode] = ptr;			// linked list로써 identifier 삽입
 }
 
+void PrintHStable() {
+	int i, j;
+	HTpointer here;
+
+	// Heading 출력
+	printf("\n\n\n\n\n [[ HASH TABLE ]] \n\n");
+
+	// Hash Table 출력
+	for (i = 0; i < HTsize; i++) {
+		if (HT[i] != NULL) {
+			printf(" Hash Code %3d : ", i);
+			for (here = HT[i]; here != NULL; here = here->next) {
+				j = here->index;
+				while (ST[j] != '\0' && j < STsize)
+					printf("%c", ST[j++]);
+				printf("    ");
+			}
+			printf("\n");
+		}
+	}
+}
 
 // SymbolTable - identifier를 이용하여 hashcode를 계산하고, 그 값을 Hash Table에 저장하는 함수
-void SymbolTable(const char identifier[20])
+void SymbolTable(const char *identifier)
 {
-	char* temp = malloc(20);
-	temp = identifier;
+	//EB: I added strcpy() function for copying the string of 'identifer' to 'identStr' variable 
+	printf("identifier: %s\n", identifier);
+	strcpy(identStr, identifier);
+	printf("identStr: %s \n", identStr);
 
-	identStr = temp;
 	nextfree += strlen(identifier) + 1;
 
 	for (int i = 0; i < strlen(identifier); i++) {
@@ -126,6 +148,4 @@ void SymbolTable(const char identifier[20])
 		nextfree = nextid;
 	}
 	nextid = nextfree;
-
-	
 }

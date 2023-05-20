@@ -56,7 +56,7 @@ init_dcl_list 		: init_declarator										{semantic(29);}
 					| init_dcl_list TCOLON init_declarator					{semantic(30);};
 init_declarator		: declarator											{semantic(31);}
 					| declarator TASSIGN TNUMBER							{semantic(32);};
-declarator 			: TIDENT												{printf("TIDENT : %s \n", identStr); semantic(33);}
+declarator 			: TIDENT												{printf("TIDENT : %s \n", identStr); defineTypeHS("integer scalar variable", identStr); semantic(33);}
 	     			| TIDENT TLEFTBRACKET opt_number TRIGHTBRACKET			{defineTypeHS("integer array variable", $1); semantic(34);};
 opt_number 			: TNUMBER												{semantic(35);}
 	     			|														{semantic(36);};
@@ -129,17 +129,14 @@ void semantic(int n)
 
 void defineTypeHS(const char *type, const char *identifier)
 {
-	printf(".___________0_______");
 	printf("type: %s \n", type);
 	printf("iden: %s \n", identifier);
 	int length = strlen(identifier);
-	printf(".___________1_______");
 	int found = FALSE;
 	int hashcode = 0;
 	for (int i = 0; i < length; i++) {
 		hashcode += (int)identifier[i];
 	}
-	printf(".___________2_______");
 	hashcode %= HTsize;
 
 	HTpointer here;
@@ -148,7 +145,6 @@ void defineTypeHS(const char *type, const char *identifier)
 
 	// hash code 위치에 어떠한 문자라도 존재하는 경우
 	if (HT[hashcode] != NULL) {  
-	printf(".___________3_______");
 		here = HT[hashcode];
 		while (here != NULL && found == FALSE) {		// 현재 가리키는 위치에 문자가 있고 아직 identifier가 발견되지 않은 경우
 			found = TRUE;
@@ -172,5 +168,4 @@ void defineTypeHS(const char *type, const char *identifier)
 		}
 		here->type = type;
 	}
-	
 }

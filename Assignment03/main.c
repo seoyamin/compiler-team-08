@@ -14,6 +14,7 @@ extern int yyparse();
 extern STindex();
 extern ComputeHS();
 extern LookupHS();
+extern PrintHStable();
 extern char* yytext;
 
 unsigned int cErrors = 0;       // 발생한 에러의 횟수
@@ -87,7 +88,10 @@ void main()
 	printf("start of parser\n");
 	yyparse();
 	printf("end of parser\n");
+
+	PrintHStable();
 	printf("\n[1983024 Mingyo Choi, 2017007 Minseo Kim, 2173109 Eunbi Jeong]\n");
+
 
 	//// 헤더 출력 (Line number, Token Type, ST-index, Token)
 	//printf("Line number	Token type		 ST-index	        Token\n");

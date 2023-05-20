@@ -1,13 +1,14 @@
 %{
 /*
-* scanner.l - Modified MiniC¸¦ À§ÇÑ Lexical Analyzer
-* programmer - ±è¹Î¼­, Á¤Àººñ, ÃÖ¹Î±³
+* scanner.l - Modified MiniCë¥¼ ìœ„í•œ Lexical Analyzer
+* programmer - ê¹€ë¯¼ì„œ, ì •ì€ë¹„, ìµœë¯¼êµ
 * date - 05/30/2023
 */
 #include <stdio.h>
 #include <stdlib.h>
 #include "tn.h" 
 #include "glob.h"
+
 extern SymbolTable();
 extern reporterror();
 %}
@@ -51,29 +52,31 @@ digit [0-9]
 "["	  return(TLEFTBRACKET);
 "]"	  return(TRIGHTBRACKET);
 ";"	  return(TSEMI);
-"\n"	  linenum = linenum + 1;
-{letter}({letter}|{digit})*   { if (yyleng <= 10) {			// Á¤»ó identifier
-									SymbolTable(yytext);		
+"\n"	  currlinenum = currlinenum + 1;
+{letter}({letter}|{digit})*   { if (yyleng <= 10) {			// ì •ìƒ identifier
+									SymbolTable(yytext);	
+									printf("@@@@@@ %s \n", yytext);
 									return(TIDENT); 
 								}
-								else {						// ¿¡·¯ ¹ß»ı (OVERLEN)
+								else {						// ì—ëŸ¬ ë°œìƒ (OVERLEN)
+									
 									reporterror(yytext);
 									return(TERROR);    
 								}
 							  } 
 {digit}+   return(TNUMBER);
 {digit}+{letter}*	{
-						reporterror(yytext);	// ¿¡·¯ ¹ß»ı (ILLIDENT)
+						reporterror(yytext);	// ì—ëŸ¬ ë°œìƒ (ILLIDENT)
 						return(TERROR);  
 					}
 "//".*     ;
 [ \t]      ;
 .            {
-				reporterror(yytext);		// ¿¡·¯ ¹ß»ı (ILLCHAR)
+				reporterror(yytext);		// ì—ëŸ¬ ë°œìƒ (ILLCHAR)
 				return(TERROR);    
 			 }
 %%
 int yywrap()
 {   
     return 1;
-}                                      
+}            

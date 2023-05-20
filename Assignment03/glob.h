@@ -28,4 +28,4 @@ typedef struct HTentry {
 HTpointer HT[HTsize];
 char ST[STsize];
 
-char* identStr;
+char identStr[20];   

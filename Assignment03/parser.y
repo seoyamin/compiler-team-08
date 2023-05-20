@@ -129,8 +129,8 @@ void semantic(int n)
 
 void defineTypeHS(const char *type, const char *identifier)
 {
-	printf("type: %s \n", type);
-	printf("iden: %s \n", identifier);
+	printf("\n\n******  Inside the defineTypeHS()  ******\n");
+	printf("type: %s, identifier: %s \n\n", type, identifier);
 	int length = strlen(identifier);
 	int found = FALSE;
 	int hashcode = 0;

@@ -1,9 +1,14 @@
 %{
 #include <stdio.h>
+#include <string.h>
 #include <ctype.h>
 #include <malloc.h>
+#include "tn.h"
+#include "glob.h"
 
 /*yacc source for Mini C*/
+void semantic(int);
+void defineTypeHS(const char *type, const char *identifier); 
 %}
 
 %nonassoc TLOWERTHANELSE
@@ -45,13 +50,13 @@ compound_st 		: TLEFTBRACE opt_dcl_list opt_stat_list TRIGHTBRACE 	{semantic(23)
 opt_dcl_list 		: declaration_list										{semantic(24);}
 					|														{semantic(25);};
 declaration_list 	: declaration											{semantic(26);}
-					| declaration_list declaration 							{semantic(27);};
+					| declaration_list declaration 						{semantic(27);};
 declaration 		: dcl_spec init_dcl_list TSEMI							{semantic(28);};
 init_dcl_list 		: init_declarator										{semantic(29);}
 					| init_dcl_list TCOLON init_declarator					{semantic(30);};
 init_declarator		: declarator											{semantic(31);}
 					| declarator TASSIGN TNUMBER							{semantic(32);};
-declarator 			: TIDENT												{defineTypeHS("integer scalar variable", $1); semantic(33);}
+declarator 			: TIDENT												{printf("TIDENT : %s \n", identStr); semantic(33);}
 	     			| TIDENT TLEFTBRACKET opt_number TRIGHTBRACKET			{defineTypeHS("integer array variable", $1); semantic(34);};
 opt_number 			: TNUMBER												{semantic(35);}
 	     			|														{semantic(36);};
@@ -89,7 +94,7 @@ equality_exp 		: relational_exp										{semantic(65);}
 relational_exp 		: additive_exp 											{semantic(68);}
 					| relational_exp TGREAT additive_exp	 				{semantic(69);}
 					| relational_exp TLESS additive_exp						{semantic(70);}
-					| relational_exp TGRATE additive_exp					{semantic(71);}
+					| relational_exp TGREATE additive_exp					{semantic(71);}
 					| relational_exp TLESSE additive_exp					{semantic(72);};
 additive_exp 		: multiplicative_exp									{semantic(73);}
 					| additive_exp TADD multiplicative_exp					{semantic(74);}
@@ -117,7 +122,6 @@ primary_exp 		: TIDENT												{semantic(95);}
 	     			| TNUMBER												{semantic(96);}
 	     			| TLEFTPAR expression TRIGHTPAR							{semantic(97);};
 %%
-
 void semantic(int n)
 {	
 	printf("reduced rule number = %d\n",n);
@@ -125,11 +129,17 @@ void semantic(int n)
 
 void defineTypeHS(const char *type, const char *identifier)
 {
+	printf(".___________0_______");
+	printf("type: %s \n", type);
+	printf("iden: %s \n", identifier);
 	int length = strlen(identifier);
+	printf(".___________1_______");
+	int found = FALSE;
 	int hashcode = 0;
 	for (int i = 0; i < length; i++) {
 		hashcode += (int)identifier[i];
 	}
+	printf(".___________2_______");
 	hashcode %= HTsize;
 
 	HTpointer here;
@@ -137,8 +147,9 @@ void defineTypeHS(const char *type, const char *identifier)
 	found = FALSE; 	// Hash Table을 읽기 전, FALSE로 초기화
 
 	// hash code 위치에 어떠한 문자라도 존재하는 경우
-	if (HT[hscode] != NULL) {  
-		here = HT[hscode];
+	if (HT[hashcode] != NULL) {  
+	printf(".___________3_______");
+		here = HT[hashcode];
 		while (here != NULL && found == FALSE) {		// 현재 가리키는 위치에 문자가 있고 아직 identifier가 발견되지 않은 경우
 			found = TRUE;
 			i = here->index;

@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include "glob.h"
 
+
 // Letter, Digit 여부 판단
 #define isLetter(x) (((x) >= 'a' && (x) <='z') ||((x) >= 'A' && (x) <='Z') || ((x)=='_'))
 #define isDigit(x) (((x) >= '0' && (x) <='9'))
@@ -29,18 +30,18 @@ void reporterror(const char* input) {
 		et = OVERLEN;				// [case 1] identifier가 10자 초과인 경우 -> overlen
 	else if (isDigit(input[0]))		// [case 2] 숫자로 시작하는 경우 -> illid
 		et = ILLID;
-	else 
+	else
 		et = ILLCHAR;				// [case 3] 특수문자가 존재하는 경우 -> illchar
-	
 
-	printf("%d		**Error**					", linenum);
+
+	printf("%d		**Error**					", currlinenum);
 
 	// error message 출력
 	switch (et) {
-	case OVERLEN: 
+	case OVERLEN:
 		printf("%s TOO LONG \n", input);
 		break;
-	case ILLID: 
+	case ILLID:
 		printf("%s ILLEGAL IDENT \n", input);
 		break;
 	case ILLCHAR:
@@ -51,4 +52,9 @@ void reporterror(const char* input) {
 		printf(" ILLEGAL CHARACTER \n");
 		break;
 	}
+}
+
+void yyerror(char* s)
+{
+	printf("%s\n", s);
 }

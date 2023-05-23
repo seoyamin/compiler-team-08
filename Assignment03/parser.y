@@ -5,10 +5,11 @@
 #include <malloc.h>
 #include "tn.h"
 #include "glob.h"
+extern yyerror();
 
 /*yacc source for Mini C*/
 void semantic(int);
-void defineTypeHS(const char *type, const char *identifier); 
+void defineIdentType(const char *type, const char *identifier); 
 %}
 
 %nonassoc TLOWERTHANELSE
@@ -39,8 +40,9 @@ dcl_specifier 		: type_qualifier										{semantic(11);}
 type_qualifier 		: TCONST												{semantic(13);};
 type_specifier 		: TINT													{semantic(14);}
 		 			| TVOID													{semantic(15);};
-function_name 		: TIDENT												{semantic(16);};
-formal_param 		: TLEFTPAR opt_formal_param TRIGHTPAR 					{semantic(17);};
+function_name 		: TIDENT												{printf("TIDENT : %s \n", identStr); defineIdentType("function name", identStr); semantic(16);};
+formal_param 		: TLEFTPAR opt_formal_param TRIGHTPAR 					{semantic(17);}
+					| TLEFTPAR opt_formal_param error						{yyerrok; yyerror("formal_param_no_right parenthesis\n"); semantic(17);};
 opt_formal_param 	: formal_param_list										{semantic(18);}
 					|														{semantic(19);};
 formal_param_list 	: param_dcl												{semantic(20);}
@@ -50,14 +52,16 @@ compound_st 		: TLEFTBRACE opt_dcl_list opt_stat_list TRIGHTBRACE 	{semantic(23)
 opt_dcl_list 		: declaration_list										{semantic(24);}
 					|														{semantic(25);};
 declaration_list 	: declaration											{semantic(26);}
-					| declaration_list declaration 						{semantic(27);};
-declaration 		: dcl_spec init_dcl_list TSEMI							{semantic(28);};
+					| declaration_list declaration 							{semantic(27);};
+declaration 		: dcl_spec init_dcl_list TSEMI							{semantic(28);}
+					| dcl_spec init_dcl_list error 							{yyerrok; yyerror("declaration_no_semi\n");};
 init_dcl_list 		: init_declarator										{semantic(29);}
 					| init_dcl_list TCOLON init_declarator					{semantic(30);};
 init_declarator		: declarator											{semantic(31);}
 					| declarator TASSIGN TNUMBER							{semantic(32);};
-declarator 			: TIDENT												{printf("TIDENT : %s \n", identStr); defineTypeHS("integer scalar variable", identStr); semantic(33);}
-	     			| TIDENT TLEFTBRACKET opt_number TRIGHTBRACKET			{defineTypeHS("integer array variable", $1); semantic(34);};
+declarator 			: TIDENT												{printf("TIDENT : %s \n", identStr); defineIdentType("integer scalar variable", identStr); semantic(33);}
+	     			| TIDENT TLEFTBRACKET opt_number TRIGHTBRACKET			{printf("TIDENT : %s \n", identStr); defineIdentType("integer array variable", identStr); semantic(34);}
+					| TIDENT TLEFTBRACKET opt_number error					{yyerrok; yyerror("declarator_no_right bracket\n");};
 opt_number 			: TNUMBER												{semantic(35);}
 	     			|														{semantic(36);};
 opt_stat_list 		: statement_list										{semantic(37);}
@@ -69,13 +73,17 @@ statement 			: compound_st											{semantic(41);}
 	   				| if_st													{semantic(43);}
 	   				| while_st												{semantic(44);}
 	   				| return_st												{semantic(45);};
-expression_st 		: opt_expression TSEMI									{semantic(46);};
+expression_st 		: opt_expression TSEMI									{semantic(46);}
+					| opt_expression error									{yyerrok; yyerror("expression_st_no_semi\n");};
 opt_expression 		: expression											{semantic(47);}
 		 			|														{semantic(48);};
 if_st 				: TIF TLEFTPAR expression TRIGHTPAR statement	 %prec TLOWERTHANELSE {semantic(49);}
-					| TIF TLEFTPAR expression TRIGHTPAR statement TELSE statement 	{semantic(50);};
-while_st 			: TWHILE TLEFTPAR expression TRIGHTPAR statement 		{semantic(51);};
-return_st 			: TRETURN opt_expression TSEMI							{semantic(52);};
+					| TIF TLEFTPAR expression TRIGHTPAR statement TELSE statement 	{semantic(50);}
+					| TIF TLEFTPAR expression error statement				{yyerrok; yyerror("if_st_no_right bracket\n");};
+while_st 			: TWHILE TLEFTPAR expression TRIGHTPAR statement 		{semantic(51);}
+					| TWHILE TLEFTPAR expression error statement			{yyerrok; yyerror("while_st_no_right parenthesis\n");};
+return_st 			: TRETURN opt_expression TSEMI							{semantic(52);}
+					| TRETURN opt_expression error							{yyerrok; yyerror("return_st_no_semi\n");};
 expression 			: assignment_exp										{semantic(53);};
 assignment_exp 		: logical_or_exp										{semantic(54);}
 					| unary_exp TASSIGN assignment_exp 						{semantic(55);}
@@ -110,7 +118,9 @@ unary_exp 			: postfix_exp											{semantic(80);}
 	   				| TDEC unary_exp										{semantic(84);};
 postfix_exp 		: primary_exp											{semantic(85);}
 	      			| postfix_exp TLEFTBRACKET expression TRIGHTBRACKET 	{semantic(86);}
-	      			| postfix_exp TLEFTPAR opt_actual_param TRIGHTPAR 		{semantic(87);}
+					| postfix_exp TLEFTBRACKET expression error				{yyerrok; yyerror("postfix_exp_no_right bracket\n");}
+					| postfix_exp TLEFTPAR opt_actual_param TRIGHTPAR 		{semantic(87);}
+					| postfix_exp TLEFTPAR opt_actual_param error			{yyerrok; yyerror("postfix_exp_opt_actual_param_no_right bracket\n");}
 	      			| postfix_exp TINC										{semantic(88);}
 	      			| postfix_exp TDEC										{semantic(89);};
 opt_actual_param 	: actual_param											{semantic(90);}
@@ -118,18 +128,19 @@ opt_actual_param 	: actual_param											{semantic(90);}
 actual_param 		: actual_param_list										{semantic(92);};
 actual_param_list 	: assignment_exp										{semantic(93);}
 					| actual_param_list TCOLON assignment_exp 				{semantic(94);};
-primary_exp 		: TIDENT												{semantic(95);}
+primary_exp 		: TIDENT												{printf("TIDENT : %s \n", identStr); defineIdentType("primary expression", identStr); semantic(95);}
 	     			| TNUMBER												{semantic(96);}
-	     			| TLEFTPAR expression TRIGHTPAR							{semantic(97);};
+	     			| TLEFTPAR expression TRIGHTPAR							{semantic(97);}
+					| TLEFTPAR expression error								{yyerrok; yyerror("primary_exp_no_rightpar\n"); semantic(97);};
 %%
 void semantic(int n)
 {	
 	printf("reduced rule number = %d\n",n);
 }
 
-void defineTypeHS(const char *type, const char *identifier)
+void defineIdentType(const char *type, const char *identifier)
 {
-	printf("\n\n******  Inside the defineTypeHS()  ******\n");
+	printf("\n\n******  Inside the defineIdentType()  ******\n");
 	printf("type: %s, identifier: %s \n\n", type, identifier);
 	int length = strlen(identifier);
 	int found = FALSE;

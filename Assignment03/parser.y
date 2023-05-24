@@ -27,7 +27,7 @@ void defineIdentType(const char *type, const char *identifier);
 %%
 mini_c 				: translation_unit										{semantic(1);};
 translation_unit 	: external_dcl											{semantic(2);}
-					| translation_unit external_dcl							{semantic(3);};
+					| translation_unit external_dcl						{semantic(3);};
 external_dcl 		: function_def											{semantic(4);}
 					| declaration											{semantic(5);};
 function_def 		: function_header compound_st							{semantic(6);};
@@ -52,18 +52,18 @@ compound_st 		: TLEFTBRACE opt_dcl_list opt_stat_list TRIGHTBRACE 	{semantic(23)
 opt_dcl_list 		: declaration_list										{semantic(24);}
 					|														{semantic(25);};
 declaration_list 	: declaration											{semantic(26);}
-					| declaration_list declaration 							{semantic(27);};
+					| declaration_list declaration 						{semantic(27);};
 declaration 		: dcl_spec init_dcl_list TSEMI							{semantic(28);}
-					| dcl_spec init_dcl_list error 							{yyerrok; yyerror("declaration_no_semi\n");};
+					| dcl_spec init_dcl_list error 						{yyerrok; yyerror("declaration_no_semi\n");};
 init_dcl_list 		: init_declarator										{semantic(29);}
 					| init_dcl_list TCOLON init_declarator					{semantic(30);};
 init_declarator		: declarator											{semantic(31);}
 					| declarator TASSIGN TNUMBER							{semantic(32);};
 declarator 			: TIDENT												{printf("TIDENT : %s \n", identStr); defineIdentType("integer scalar variable", identStr); semantic(33);}
-	     			| TIDENT TLEFTBRACKET opt_number TRIGHTBRACKET			{printf("TIDENT : %s \n", identStr); defineIdentType("integer array variable", identStr); semantic(34);}
-					| TIDENT TLEFTBRACKET opt_number error					{yyerrok; yyerror("declarator_no_right bracket\n");};
-opt_number 			: TNUMBER												{semantic(35);}
-	     			|														{semantic(36);};
+					| TIDENT TLEFTBRACKET TRIGHTBRACKET					{printf("TIDENT : %s \n", identStr); defineIdentType("integer array variable", identStr); semantic(34);}
+					| TIDENT TLEFTBRACKET error								{yyerrok; yyerror("declarator_no_number\n");}
+	     			| TIDENT TLEFTBRACKET TNUMBER TRIGHTBRACKET			{printf("TIDENT : %s \n", identStr); defineIdentType("integer array variable", identStr); semantic(34);}
+					| TIDENT TLEFTBRACKET TNUMBER error					{yyerrok; yyerror("declarator_no_right bracket\n");};
 opt_stat_list 		: statement_list										{semantic(37);}
 		 			|														{semantic(38);};
 statement_list 		: statement												{semantic(39);}
@@ -73,17 +73,19 @@ statement 			: compound_st											{semantic(41);}
 	   				| if_st													{semantic(43);}
 	   				| while_st												{semantic(44);}
 	   				| return_st												{semantic(45);};
-expression_st 		: opt_expression TSEMI									{semantic(46);}
-					| opt_expression error									{yyerrok; yyerror("expression_st_no_semi\n");};
-opt_expression 		: expression											{semantic(47);}
-		 			|														{semantic(48);};
+expression_st 		: TSEMI													{semantic(46);}
+					| error													{yyerrok; yyerror("expression_st_no_semi\n");}
+					| expression TSEMI										{semantic(46);}
+					| expression error										{yyerrok; yyerror("expression_st_no_semi\n");};
 if_st 				: TIF TLEFTPAR expression TRIGHTPAR statement	 %prec TLOWERTHANELSE {semantic(49);}
 					| TIF TLEFTPAR expression TRIGHTPAR statement TELSE statement 	{semantic(50);}
 					| TIF TLEFTPAR expression error statement				{yyerrok; yyerror("if_st_no_right bracket\n");};
 while_st 			: TWHILE TLEFTPAR expression TRIGHTPAR statement 		{semantic(51);}
 					| TWHILE TLEFTPAR expression error statement			{yyerrok; yyerror("while_st_no_right parenthesis\n");};
-return_st 			: TRETURN opt_expression TSEMI							{semantic(52);}
-					| TRETURN opt_expression error							{yyerrok; yyerror("return_st_no_semi\n");};
+return_st 			: TRETURN TSEMI							{semantic(52);}
+					| TRETURN error							{yyerrok; yyerror("return_st_no_semi\n");};
+					| TRETURN expression TSEMI							{semantic(52);}
+					| TRETURN expression error							{yyerrok; yyerror("return_st_no_semi\n");};
 expression 			: assignment_exp										{semantic(53);};
 assignment_exp 		: logical_or_exp										{semantic(54);}
 					| unary_exp TASSIGN assignment_exp 						{semantic(55);}
@@ -140,8 +142,8 @@ void semantic(int n)
 
 void defineIdentType(const char *type, const char *identifier)
 {
-	printf("\n\n******  Inside the defineIdentType()  ******\n");
-	printf("type: %s, identifier: %s \n\n", type, identifier);
+	//printf("\n\n******  Inside the defineIdentType()  ******\n");
+	//printf("type: %s, identifier: %s \n\n", type, identifier);
 	int length = strlen(identifier);
 	int found = FALSE;
 	int hashcode = 0;

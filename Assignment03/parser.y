@@ -47,8 +47,10 @@ opt_formal_param 	: formal_param_list										{semantic(18);}
 					|														{semantic(19);};
 formal_param_list 	: param_dcl												{semantic(20);}
 		    		| formal_param_list TCOLON param_dcl 					{semantic(21);};
-param_dcl 			: dcl_spec declarator									{semantic(22);};
-compound_st 		: TLEFTBRACE opt_dcl_list opt_stat_list TRIGHTBRACE 	{semantic(23);};
+param_dcl 			: dcl_spec declarator									{semantic(22);}
+					| dcl_spec error										{yyerrok; yyerror("param_dcl_no_declarator\n");};
+compound_st 		: TLEFTBRACE opt_dcl_list opt_stat_list TRIGHTBRACE 	{semantic(23);}
+					| TLEFTBRACE opt_dcl_list opt_stat_list error		 	{yyerrok; yyerror("compound_st_right brace\n");};
 opt_dcl_list 		: declaration_list										{semantic(24);}
 					|														{semantic(25);};
 declaration_list 	: declaration											{semantic(26);}
@@ -58,7 +60,8 @@ declaration 		: dcl_spec init_dcl_list TSEMI							{semantic(28);}
 init_dcl_list 		: init_declarator										{semantic(29);}
 					| init_dcl_list TCOLON init_declarator					{semantic(30);};
 init_declarator		: declarator											{semantic(31);}
-					| declarator TASSIGN TNUMBER							{semantic(32);};
+					| declarator TASSIGN TNUMBER							{semantic(32);}
+					| declarator TASSIGN error								{yyerrok; yyerror("init_declarator_no_number\n");};
 declarator 			: TIDENT												{printf("TIDENT : %s \n", identStr); defineIdentType("integer scalar variable", identStr); semantic(33);}
 					| TIDENT TLEFTBRACKET TRIGHTBRACKET					{printf("TIDENT : %s \n", identStr); defineIdentType("integer array variable", identStr); semantic(34);}
 					| TIDENT TLEFTBRACKET error								{yyerrok; yyerror("declarator_no_number\n");}
@@ -74,7 +77,6 @@ statement 			: compound_st											{semantic(41);}
 	   				| while_st												{semantic(44);}
 	   				| return_st												{semantic(45);};
 expression_st 		: TSEMI													{semantic(46);}
-					| error													{yyerrok; yyerror("expression_st_no_semi\n");}
 					| expression TSEMI										{semantic(46);}
 					| expression error										{yyerrok; yyerror("expression_st_no_semi\n");};
 if_st 				: TIF TLEFTPAR expression TRIGHTPAR statement	 %prec TLOWERTHANELSE {semantic(49);}
@@ -82,13 +84,13 @@ if_st 				: TIF TLEFTPAR expression TRIGHTPAR statement	 %prec TLOWERTHANELSE {s
 					| TIF TLEFTPAR expression error statement				{yyerrok; yyerror("if_st_no_right bracket\n");};
 while_st 			: TWHILE TLEFTPAR expression TRIGHTPAR statement 		{semantic(51);}
 					| TWHILE TLEFTPAR expression error statement			{yyerrok; yyerror("while_st_no_right parenthesis\n");};
-return_st 			: TRETURN TSEMI							{semantic(52);}
-					| TRETURN error							{yyerrok; yyerror("return_st_no_semi\n");};
-					| TRETURN expression TSEMI							{semantic(52);}
-					| TRETURN expression error							{yyerrok; yyerror("return_st_no_semi\n");};
+return_st 			: TRETURN TSEMI											{semantic(52);}
+					| TRETURN error											{yyerrok; yyerror("return_st_no_semi\n");};
+					| TRETURN expression TSEMI								{semantic(52);}
+					| TRETURN expression error								{yyerrok; yyerror("return_st_no_semi\n");};
 expression 			: assignment_exp										{semantic(53);};
 assignment_exp 		: logical_or_exp										{semantic(54);}
-					| unary_exp TASSIGN assignment_exp 						{semantic(55);}
+					| unary_exp TASSIGN assignment_exp 					{semantic(55);}
 					| unary_exp TADDASSIGN assignment_exp					{semantic(56);}
 					| unary_exp TSUBASSIGN assignment_exp					{semantic(57);}
 					| unary_exp TMULASSIGN assignment_exp					{semantic(58);}
@@ -103,16 +105,16 @@ equality_exp 		: relational_exp										{semantic(65);}
 					| equality_exp TNOTEQU relational_exp 					{semantic(67);};
 relational_exp 		: additive_exp 											{semantic(68);}
 					| relational_exp TGREAT additive_exp	 				{semantic(69);}
-					| relational_exp TLESS additive_exp						{semantic(70);}
+					| relational_exp TLESS additive_exp					{semantic(70);}
 					| relational_exp TGREATE additive_exp					{semantic(71);}
 					| relational_exp TLESSE additive_exp					{semantic(72);};
 additive_exp 		: multiplicative_exp									{semantic(73);}
 					| additive_exp TADD multiplicative_exp					{semantic(74);}
-					| additive_exp TSUB multiplicative_exp 					{semantic(75);};
+					| additive_exp TSUB multiplicative_exp 				{semantic(75);};
 multiplicative_exp 	: unary_exp												{semantic(76);}
-		    		| multiplicative_exp TMUL unary_exp	 					{semantic(77);}
-					| multiplicative_exp TDIV unary_exp						{semantic(78);}
-				 	| multiplicative_exp TMOD unary_exp						{semantic(79);};
+		    		| multiplicative_exp TMUL unary_exp	 				{semantic(77);}
+					| multiplicative_exp TDIV unary_exp					{semantic(78);}
+				 	| multiplicative_exp TMOD unary_exp					{semantic(79);};
 unary_exp 			: postfix_exp											{semantic(80);}
 	   				| TSUB unary_exp										{semantic(81);}
 	   				| TNOT unary_exp										{semantic(82);}
@@ -120,7 +122,7 @@ unary_exp 			: postfix_exp											{semantic(80);}
 	   				| TDEC unary_exp										{semantic(84);};
 postfix_exp 		: primary_exp											{semantic(85);}
 	      			| postfix_exp TLEFTBRACKET expression TRIGHTBRACKET 	{semantic(86);}
-					| postfix_exp TLEFTBRACKET expression error				{yyerrok; yyerror("postfix_exp_no_right bracket\n");}
+					| postfix_exp TLEFTBRACKET expression error			{yyerrok; yyerror("postfix_exp_no_right bracket\n");}
 					| postfix_exp TLEFTPAR opt_actual_param TRIGHTPAR 		{semantic(87);}
 					| postfix_exp TLEFTPAR opt_actual_param error			{yyerrok; yyerror("postfix_exp_opt_actual_param_no_right bracket\n");}
 	      			| postfix_exp TINC										{semantic(88);}
@@ -132,7 +134,7 @@ actual_param_list 	: assignment_exp										{semantic(93);}
 					| actual_param_list TCOLON assignment_exp 				{semantic(94);};
 primary_exp 		: TIDENT												{printf("TIDENT : %s \n", identStr); defineIdentType("primary expression", identStr); semantic(95);}
 	     			| TNUMBER												{semantic(96);}
-	     			| TLEFTPAR expression TRIGHTPAR							{semantic(97);}
+	     			| TLEFTPAR expression TRIGHTPAR						{semantic(97);}
 					| TLEFTPAR expression error								{yyerrok; yyerror("primary_exp_no_rightpar\n"); semantic(97);};
 %%
 void semantic(int n)

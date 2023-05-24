@@ -57,4 +57,5 @@ void reporterror(const char* input) {
 void yyerror(char* s)
 {
 	printf("%s\n", s);
+	cErrors++; // 에러 수 세기 추가
 }

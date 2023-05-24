@@ -85,9 +85,10 @@ void main()
 {
 	enum tokentypes tn;  // 토큰 타입
 
-	printf("start of parser\n");
+	printf("*** MiniC parsing begins\n");
 	yyparse();
-	printf("end of parser\n");
+	printf("Parsing ends. ***\n");
+	printf("%d error(s) detected\n", cErrors);
 
 	PrintHStable();
 	printf("\n[1983024 Mingyo Choi, 2017007 Minseo Kim, 2173109 Eunbi Jeong]\n");

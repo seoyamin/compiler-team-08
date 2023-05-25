@@ -88,7 +88,7 @@ void main()
 	printf("*** MiniC parsing begins\n");
 	yyparse();
 	printf("Parsing ends. ***\n");
-	printf("%d error(s) detected\n", cErrors);
+	//printf("%d error(s) detected\n", cErrors);
 
 	PrintHStable();
 	printf("\n[1983024 Mingyo Choi, 2017007 Minseo Kim, 2173109 Eunbi Jeong]\n");

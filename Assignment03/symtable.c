@@ -104,18 +104,18 @@ void PrintHStable() {
 	HTpointer here;
 
 	// Heading 출력
-	printf("\n\n\n\n\n [[ HASH TABLE ]] \n\n");
+	printf("\n\n [ HASH TABLE ] \n\n");
 
 	// Hash Table 출력
 	for (i = 0; i < HTsize; i++) {
 		if (HT[i] != NULL) {
-			printf(" Hash Code %3d : ", i);
+			printf(" Hash Code %3d \n", i);
 			for (here = HT[i]; here != NULL; here = here->next) {
 				j = here->index;
+				printf(" -  ");
 				while (ST[j] != '\0' && j < STsize)
 					printf("%c", ST[j++]);
 				printf("\t(%s, line %d)\n", here->type, here->linenum);
-				printf("    ");
 			}
 			printf("\n");
 		}
@@ -126,9 +126,7 @@ void PrintHStable() {
 void SymbolTable(const char *identifier)
 {
 	//EB: I added strcpy() function for copying the string of 'identifer' to 'identStr' variable 
-	printf("identifier: %s\n", identifier);
 	strcpy(identStr, identifier);
-	printf("identStr: %s \n", identStr);
 
 	nextfree += strlen(identifier) + 1;
 

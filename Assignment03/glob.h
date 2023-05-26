@@ -7,8 +7,18 @@ extern int currid;				// the current identifier
 extern unsigned int currlinenum;	// current line number
 extern unsigned int cErrors;	// 등장한 에러 횟수
 
-enum errortypes;				// 에러 타입 enum 
-enum errortypes et;
+// enum idenerrortypes;				// identifier의 에러 타입 enum 
+
+enum idenerrortypes {
+	OVERLEN, ILLCHAR, ILLID
+};
+
+enum errortypes {
+	NO_SEMI, NO_EXP, NO_NUM,
+	NO_LEFTBRACKET, NO_RIGHTBRACKET, NO_LEFTBRACE, NO_RIGHTBRACE, NO_LEFTPAR, NO_RIGHTPAR
+};
+
+enum idenerrortypes identifier_et;
 
 #define STsize 1000		// String Table(ST)의 size
 #define HTsize 100		// Hash Table(HT)의 size

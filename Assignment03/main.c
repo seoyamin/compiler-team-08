@@ -85,11 +85,11 @@ void main()
 {
 	enum tokentypes tn;  // 토큰 타입
 
-	printf("*** MiniC parsing begins\n");
+	printf("\n************************** start of parser **************************** \n\n");
 	yyparse();
-	printf("Parsing ends. ***\n");
-	//printf("%d error(s) detected\n", cErrors);
+	printf("\n*************************** end of parser ***************************** \n\n");
 
+	printf("--> %d errors detected\n", cErrors);
 	PrintHStable();
 	printf("\n[1983024 Mingyo Choi, 2017007 Minseo Kim, 2173109 Eunbi Jeong]\n");
 

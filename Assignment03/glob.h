@@ -14,8 +14,9 @@ enum idenerrortypes {
 };
 
 enum errortypes {
-	NO_SEMI, NO_EXP, NO_NUM,
-	NO_LEFTBRACKET, NO_RIGHTBRACKET, NO_LEFTBRACE, NO_RIGHTBRACE, NO_LEFTPAR, NO_RIGHTPAR
+	NO_SEMI, NO_EXP, NO_NUM, NO_COLON, NO_DCL,
+	NO_LEFTBRACKET, NO_RIGHTBRACKET, NO_LEFTBRACE, NO_RIGHTBRACE, NO_LEFTPAR, NO_RIGHTPAR,
+	NO_EXP_OR_NO_SEMI, NO_NUM_OR_NO_RIGHTBRACKET, NO_RIGHT_SIDE_EXP
 };
 
 enum idenerrortypes identifier_et;
@@ -31,11 +32,11 @@ typedef struct HTentry* HTpointer;
 typedef struct HTentry {
 	int index;             // ST상에서 identifier의 인덱스
 	HTpointer next;        // 다음 identifier를 위한 포인터
-	char *type;	       // identifier의 속성
+	char* type;	       // identifier의 속성
 	int linenum;		// identifier의 linenum (We should add the initialization code for this variable.)
 } HTentry;
 
 HTpointer HT[HTsize];
 char ST[STsize];
 
-char identStr[20];   
+char identStr[20];

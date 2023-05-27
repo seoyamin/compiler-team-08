@@ -123,10 +123,12 @@ void PrintHStable() {
 }
 
 // SymbolTable - identifier를 이용하여 hashcode를 계산하고, 그 값을 Hash Table에 저장하는 함수
-void SymbolTable(const char *identifier)
+void SymbolTable(const char* identifier)
 {
 	//EB: I added strcpy() function for copying the string of 'identifer' to 'identStr' variable 
+	printf("\n\nidentStr: %s, identifier: %s \n", identStr, identifier);
 	strcpy(identStr, identifier);
+	printf("(After strcpy)identifier: %s \n\n", identifier);
 
 	nextfree += strlen(identifier) + 1;
 

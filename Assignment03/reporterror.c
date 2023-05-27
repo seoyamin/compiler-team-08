@@ -1,7 +1,7 @@
 /*
 * reporterror.c - 각 token에 대한 error 메시지 출력
 * programmer - 김민서, 정은비, 최민교
-* date - 04/26/2023
+* date - 05/30/2023
 */
 
 #include <stdio.h>
@@ -67,6 +67,12 @@ void printerror(char* non_terminal, enum errortypes et)
 	case NO_NUM:
 		printf("no number");
 		break;
+	case NO_COLON:
+		printf("no colon");
+		break;
+	case NO_DCL:
+		printf("no declarator");
+		break;
 	case NO_LEFTBRACKET:
 		printf("no left bracket");
 		break;
@@ -85,7 +91,15 @@ void printerror(char* non_terminal, enum errortypes et)
 	case NO_RIGHTPAR:
 		printf("no right parenthesis");
 		break;
+	case NO_RIGHT_SIDE_EXP:
+		printf("no right side expression");
+		break;
+	case NO_EXP_OR_NO_SEMI:
+		printf("no expression or no semicolon");
+		break;
+	case NO_NUM_OR_NO_RIGHTBRACKET:
+		printf("no number or no right bracket");
+		break;
 	}
-
 	printf("  (%s, line % d)\n", non_terminal, currlinenum - 1);
 }

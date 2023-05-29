@@ -3,23 +3,6 @@
 * progrmmer - 김민서, 정은비, 최민교
 * date - 30/05/2023
 */
-extern int currid;				// the current identifier 
-extern unsigned int currlinenum;	// current line number
-extern unsigned int cErrors;	// 등장한 에러 횟수
-
-// enum idenerrortypes;				// identifier의 에러 타입 enum 
-
-enum idenerrortypes {
-	OVERLEN, ILLCHAR, ILLID
-};
-
-enum errortypes {
-	NO_SEMI, NO_EXP, NO_NUM, NO_COLON, NO_DCL,
-	NO_LEFTBRACKET, NO_RIGHTBRACKET, NO_LEFTBRACE, NO_RIGHTBRACE, NO_LEFTPAR, NO_RIGHTPAR,
-	NO_EXP_OR_NO_SEMI, NO_NUM_OR_NO_RIGHTBRACKET, NO_RIGHT_SIDE_EXP
-};
-
-enum idenerrortypes identifier_et;
 
 #define STsize 1000		// String Table(ST)의 size
 #define HTsize 100		// Hash Table(HT)의 size
@@ -27,7 +10,20 @@ enum idenerrortypes identifier_et;
 #define FALSE 0
 #define TRUE 1
 
-/* global variables from symtable.c */
+extern unsigned int currlinenum;	// 현재 line number
+extern unsigned int cErrors;		// 등장한 에러 횟수
+
+enum tokenerrortypes identifier_et;
+enum tokenerrortypes {
+	OVERLEN, ILLCHAR, ILLID
+};
+
+enum parseerrortypes {
+	NO_SEMI, NO_EXP, NO_NUM, NO_COLON, NO_DCL,
+	NO_LEFTBRACKET, NO_RIGHTBRACKET, NO_LEFTBRACE, NO_RIGHTBRACE, NO_LEFTPAR, NO_RIGHTPAR,
+	NO_EXP_OR_NO_SEMI, NO_NUM_OR_NO_RIGHTBRACKET, NO_RIGHT_SIDE_EXP
+};
+
 typedef struct HTentry* HTpointer;
 typedef struct HTentry {
 	int index;             // ST상에서 identifier의 인덱스

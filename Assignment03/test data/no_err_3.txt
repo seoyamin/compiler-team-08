@@ -1,0 +1,11 @@
+int main(void){
+	int a;
+	int b = 3;
+	if(b == 3) a = 0;
+	else a = -1;
+	a += 10;
+	a++;
+	while( b != 10 ){
+		b++;
+	}
+} 

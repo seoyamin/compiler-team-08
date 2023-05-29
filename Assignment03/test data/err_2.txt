@@ -1,0 +1,20 @@
+int calc(int arr)
+{
+	const int 3illid;		// token err - illegal identifier
+	int xyz, yzx, zxy;
+	int arr[20;			// parse err - no right bracket
+
+	xyz = 100;
+	yzx = ;			// parse err - no right side expression
+	zxy = xyz + yzx / 9;
+	
+	while(xyz <= zxy)  {	
+		xyz *= 5;
+	}
+
+	if() {			// parse err - no expression
+		return -1;
+	}
+	
+	return ;
+}

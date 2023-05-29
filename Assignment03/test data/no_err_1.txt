@@ -1,0 +1,19 @@
+int myFunc(int h, int w)
+{
+	int hello, world;
+	int compiler[100];
+	
+	world = h + 1886;
+	hello = world - 1000;
+
+	while(hello--) {
+		world -= hello;
+		if(world % w == 0) world + 1;
+		compiler[hello] = world;
+	}
+
+	if(compiler[0] < 10) 
+		return 20;
+	else 
+		return world;
+}

@@ -1,36 +1,32 @@
 /*
-* reporterror.c - 각 token에 대한 error 메시지 출력
+* reporterror.c - token error와 parse error 출력 
 * programmer - 김민서, 정은비, 최민교
 * date - 05/30/2023
 */
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include "glob.h"
 
-
 // Letter, Digit 여부 판단
 #define isLetter(x) (((x) >= 'a' && (x) <='z') ||((x) >= 'A' && (x) <='Z') || ((x)=='_'))
 #define isDigit(x) (((x) >= '0' && (x) <='9'))
 
-// reporterror - 에러케이스 별로 Error를 출력하는 함수
-void reporterror(const char* input) {
-	cErrors++;
+// printTokenError - Token 에러 케이스 별로 오류 메시지를 출력
+void printTokenError(const char* input) {
+	cErrors++;	// error 개수 증가
 	int len = strlen(input);
 
 	// error type 판단
 	if (len > 10)
 		identifier_et = OVERLEN;				// [case 1] identifier가 10자 초과인 경우 -> overlen
-	else if (isDigit(input[0]))		// [case 2] 숫자로 시작하는 경우 -> illid
+	else if (isDigit(input[0]))					// [case 2] 숫자로 시작하는 경우 -> illid
 		identifier_et = ILLID;
 	else
 		identifier_et = ILLCHAR;				// [case 3] 특수문자가 존재하는 경우 -> illchar
 
-
-	printf("[LEX ERROR]  ");
-
 	// error message 출력
+	printf(" [TOKEN ERROR] ");
 	switch (identifier_et) {
 	case OVERLEN:
 		printf("\"%s\" is too long", input);
@@ -51,12 +47,13 @@ void reporterror(const char* input) {
 
 void yyerror(char* s) {}
 
-void printerror(char* non_terminal, enum errortypes et)
+// printParseError - Parse 에러 케이스 별로 오류 메시지 출력
+void printParseError(char* non_terminal, enum parseerrortypes et)
 {
-	cErrors++;
-	printf("[PARSE ERROR] ");
+	cErrors++;	// error 개수 증가
 
 	// error message 출력
+	printf(" [PARSE ERROR] ");
 	switch (et) {
 	case NO_SEMI:
 		printf("no semicolon");

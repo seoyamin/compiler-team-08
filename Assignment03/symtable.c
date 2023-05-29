@@ -1,42 +1,23 @@
 /*
-* symtable.c ? 해시코드 계산함으로써 해당 identifier이 ST에 존재하는지 판단하고 ST에 identifier 삽입
-* programmer ? 김민서, 정은비, 최민교
+* symtable.c - 해시코드 계산함으로써 해당 identifier이 ST에 존재하는지 판단하고 ST에 identifier 삽입
+* programmer - 김민서, 정은비, 최민교
 * date - 05/30/2023
 */
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include "glob.h"
 
-//#define STsize 1000		// String Table(ST)의 size
-//#define HTsize 100		// Hash Table(HT)의 size
-
-//#define FALSE 0
-//#define TRUE 1
 extern yytext;
-int nextid;				// the current identifier 
-int nextfree;			// the next available index of ST
 
-int hashcode;			//  identifier의 hashcode
-int sameid;				//  identifier의 첫번째 인덱스
+int currid = 0;				// the current index of ST
+int nextid = 0;				// the next index of ST 
+int nextfree = 0;			// the next available index of ST
 
-int found;				// for the previous occurrence of an identifier
+int hashcode;				// identifier의 hashcode
+int sameid;					// identifier의 첫번째 인덱스
 
-//typedef struct HTentry* HTpointer;
-//typedef struct HTentry {
-//	int index;             // ST상에서 identifier의 인덱스
-//	HTpointer next;        // 다음 identifier를 위한 포인터
-//	char type[50];	       // identifier의 속성
-//	int linenum;		// identifier의 linenum (We should add the initialization code for this variable.)
-//} HTentry;
-
-//HTpointer HT[HTsize];
-//char ST[STsize];
-
-nextid = 0;
-nextfree = 0;
-currid = 0;
+int found;					// for the previous occurrence of an identifier
 
 // ComputeHS - 해시코드 계산하는 함수
 void ComputeHS(int nid, int nfree) {
@@ -50,7 +31,6 @@ void ComputeHS(int nid, int nfree) {
 
 
 // LookupHs - Hash Table을 보고 현재 읽어들인 identifier의 존재 여부를 판단하는 함수
-
 void LookupHS(int nid, int hscode)
 {
 	HTpointer here;
@@ -85,7 +65,6 @@ void LookupHS(int nid, int hscode)
 
 
 // ADDHT - Hash Table에 identifier를 추가하는 함수
-
 void ADDHT(int hscode)
 {
 	HTpointer ptr;
@@ -95,10 +74,11 @@ void ADDHT(int hscode)
 	ptr->index = nextid;
 	ptr->next = HT[hscode];
 	ptr->type = NULL;
-	ptr->linenum = currlinenum;		// EB: identifier가 선언된 위치의 line number 
-	HT[hscode] = ptr;			// linked list로써 identifier 삽입
+	ptr->linenum = currlinenum;		// identifier가 선언된 위치의 line number 
+	HT[hscode] = ptr;				// linked list로써 identifier 삽입
 }
 
+// PrintHSTable - Hash Table에 저장된 identifier를 출력하는 함수
 void PrintHStable() {
 	int i, j;
 	HTpointer here;
@@ -125,14 +105,11 @@ void PrintHStable() {
 // SymbolTable - identifier를 이용하여 hashcode를 계산하고, 그 값을 Hash Table에 저장하는 함수
 void SymbolTable(const char* identifier)
 {
-	//EB: I added strcpy() function for copying the string of 'identifer' to 'identStr' variable 
-	printf("\n\nidentStr: %s, identifier: %s \n", identStr, identifier);
 	strcpy(identStr, identifier);
-	printf("(After strcpy)identifier: %s \n\n", identifier);
 
 	nextfree += strlen(identifier) + 1;
 
-	for (int i = 0; i < strlen(identifier); i++) {
+	for (int i = 0; i < strlen(identifier); i++) {	// String Table에 identifier 삽입
 		ST[i + nextid] = identifier[i];
 	}
 	ST[nextfree] = '\0';

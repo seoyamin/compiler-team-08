@@ -180,13 +180,16 @@ void semantic(int n)
 	//printf("reduced rule number = %d\n",n);
 }
 
+// defineIdentType - identifier의 타입 (변수, 함수 등)을 판단하고, 이를 HT에 저장하는 함수
 void defineIdentType(const char *type, const char *identifier)
 {
 	//printf("\n\n******  Inside the defineIdentType()  ******\n");
 	//printf("type: %s, identifier: %s \n\n", type, identifier);
 	int length = strlen(identifier);
 	int found = FALSE;
-	int hashcode = 0;
+
+	// 해당 identifier의 해시코드 구하기
+	int hashcode = 0;		
 	for (int i = 0; i < length; i++) {
 		hashcode += (int)identifier[i];
 	}
@@ -219,6 +222,6 @@ void defineIdentType(const char *type, const char *identifier)
 			if (found != TRUE) 
 				here = here->next;  // linked list의 다음 identifier로 이동						
 		}
-		here->type = type;
+		here->type = type;	// identifier의 type을 저장
 	}
 }

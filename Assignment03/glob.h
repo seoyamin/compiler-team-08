@@ -13,11 +13,13 @@
 extern unsigned int currlinenum;	// 현재 line number
 extern unsigned int cErrors;		// 등장한 에러 횟수
 
+// Scanner에서 발생 가능한 에러 타입
 enum tokenerrortypes identifier_et;
 enum tokenerrortypes {
 	OVERLEN, ILLCHAR, ILLID
 };
 
+// Parser에서 발생 가능한 에러 타입
 enum parseerrortypes {
 	NO_SEMI, NO_EXP, NO_NUM, NO_COLON, NO_DCL,
 	NO_LEFTBRACKET, NO_RIGHTBRACKET, NO_LEFTBRACE, NO_RIGHTBRACE, NO_LEFTPAR, NO_RIGHTPAR,
@@ -28,11 +30,11 @@ typedef struct HTentry* HTpointer;
 typedef struct HTentry {
 	int index;             // ST상에서 identifier의 인덱스
 	HTpointer next;        // 다음 identifier를 위한 포인터
-	char* type;	       // identifier의 속성
+	char* type;	       	// identifier의 속성
 	int linenum;		// identifier의 linenum (We should add the initialization code for this variable.)
 } HTentry;
 
 HTpointer HT[HTsize];
 char ST[STsize];
 
-char identStr[20];
+char identStr[20];	// 현재 identifier를 저장하는 변수

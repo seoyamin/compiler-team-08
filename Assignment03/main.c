@@ -29,7 +29,7 @@ void main()
 	yyparse();
 	printf("\n*************************** end of parser ***************************** \n\n");
 
-	printf("-> %d errors detected\n", cErrors);	// 에러가 발생한 횟수 출력
+	printf("-> %d error(s) detected\n", cErrors);	// 에러가 발생한 횟수 출력
 	PrintHStable();									// Hashtable 출력
 	printf("\n[1983024 Mingyo Choi, 2017007 Minseo Kim, 2173109 Eunbi Jeong]\n");
 }

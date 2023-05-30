@@ -1,0 +1,17 @@
+int happy_team() {
+	// Thanks a lot :)
+	int compiler = 0;
+	const int team = 8;
+	int happy, time;
+	time = 0;
+	happy = 0;
+	while (time <= 100) {
+		happy++;
+		compiler += happy;
+	}
+	if (happy) {
+		team = happy * 8;
+		compiler = time - team;
+	}
+	return happy;
+}

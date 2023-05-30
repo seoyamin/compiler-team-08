@@ -1,0 +1,13 @@
+void test(int a) {
+	const int b = 0100;
+	a = ;
+	a = b++ + 100
+}
+
+int imad(const int op1, int op2, int op3) {
+	int result = 0;
+	while (op1 < 100
+		result += op1
+	result = (op1 * op2) + 3;
+
+	return result;

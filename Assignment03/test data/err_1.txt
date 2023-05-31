@@ -1,12 +1,12 @@
-void main(int , int k) 	// parse err - no declarator
+void main(int , int k) 
 {
 	int sum = 0;
-	int tooLONGidentifier;	// token err - too long
+	int tooLONGidentifier;	
 
 	int i = 0;
-	while(sum < 20 {		// parse err - no right parenthesis
-		sum = sum + ;	// parse err - no right side expression
-		i++			// parse err - no semicolon
+	while(sum < 20) {		
+		sum = sum + ;	
+		i++
 	}
 
 	if(sum % 5 == 0 && sum + 2 > 7) sum += i;	

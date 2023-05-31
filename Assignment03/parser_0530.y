@@ -47,7 +47,7 @@ dcl_specifier 		: type_qualifier										{semantic(11);}
 type_qualifier 		: TCONST												{semantic(13);};
 type_specifier 		: TINT													{cReturntype = 1; semantic(14);}
 		 			| TVOID													{cReturntype = 0; semantic(15);};
-function_name 		: TIDENT												{printf(" TIDENT : %s \n", identStr); defineIdentType("function name", identStr); defineReturnType(cReturntype, identStr); semantic(16);};
+function_name 		: TIDENT												{defineIdentType("function name", identStr); defineReturnType(cReturntype, identStr); semantic(16);};
 					| TERROR												{semantic(170);}
 formal_param 		: TLEFTPAR TRIGHTPAR 									{semantic(170);}
 					| TLEFTPAR error										{yyerrok; printParseError("formal_param", NO_RIGHTPAR); semantic(171);};
@@ -59,13 +59,13 @@ formal_param_list 	: param_dcl												{semantic(20);}
 param_dcl 			: dcl_spec declarator									{semantic(22);}
 					| dcl_spec error										{yyerrok; printParseError("param_dcl", NO_DCL);};
 compound_st 		: TLEFTBRACE TRIGHTBRACE								{semantic(231);}
-					| TLEFTBRACE error										{yyerrok; printParseError("compound_st", NO_RIGHTBRACE); printf("888");}
+					| TLEFTBRACE error										{yyerrok; printParseError("compound_st", NO_RIGHTBRACE);}
 					| TLEFTBRACE declaration_list TRIGHTBRACE				{semantic(232);}
-					| TLEFTBRACE declaration_list error		 			{yyerrok; printParseError("compound_st", NO_RIGHTBRACE);printf("777");}
+					| TLEFTBRACE declaration_list error		 			{yyerrok; printParseError("compound_st", NO_RIGHTBRACE);}
 					| TLEFTBRACE statement_list TRIGHTBRACE				{semantic(233);}
-					| TLEFTBRACE statement_list error						{yyerrok; printParseError("compound_st", NO_RIGHTBRACE); printf("666");}
+					| TLEFTBRACE statement_list error						{yyerrok; printParseError("compound_st", NO_RIGHTBRACE);}
 					| TLEFTBRACE declaration_list statement_list TRIGHTBRACE	{semantic(233);}
-					| TLEFTBRACE declaration_list statement_list error		{yyerrok; printParseError("compound_st", NO_RIGHTBRACE); printf("555");};
+					| TLEFTBRACE declaration_list statement_list error		{yyerrok; printParseError("compound_st", NO_RIGHTBRACE);};
 declaration_list 	: declaration											{semantic(26);}
 					| declaration_list declaration 						{semantic(27);};
 declaration 		: dcl_spec init_dcl_list TSEMI							{semantic(28);}
@@ -76,11 +76,11 @@ init_dcl_list 		: init_declarator										{semantic(29);}
 init_declarator		: declarator											{semantic(31);}
 					| declarator TASSIGN TNUMBER							{semantic(32);}
 					| declarator TASSIGN error								{yyerrok; printParseError("init_declarator", NO_NUM);};
-declarator 			: TIDENT												{printf(" TIDENT : %s \n", identStr); defineIdentType("integer scalar variable", identStr); semantic(33);}
+declarator 			: TIDENT												{defineIdentType("integer scalar variable", identStr); semantic(33);}
 					| TERROR												{semantic(33);}
-					| TIDENT TLEFTBRACKET TNUMBER TRIGHTBRACKET			{printf(" TIDENT : %s \n", identStr); defineIdentType("integer array variable", identStr); semantic(34);}
+					| TIDENT TLEFTBRACKET TNUMBER TRIGHTBRACKET			{defineIdentType("integer array variable", identStr); semantic(34);}
 					| TERROR TLEFTBRACKET TNUMBER TRIGHTBRACKET			{semantic(34);}
-					| TIDENT TLEFTBRACKET TRIGHTBRACKET					{printf(" TIDENT : %s \n", identStr); defineIdentType("integer array variable", identStr); semantic(35);}
+					| TIDENT TLEFTBRACKET TRIGHTBRACKET					{defineIdentType("integer array variable", identStr); semantic(35);}
 					| TERROR TLEFTBRACKET TRIGHTBRACKET					{semantic(35);}
 					| TIDENT TLEFTBRACKET TNUMBER error					{yyerrok; printParseError("declarator", NO_RIGHTBRACKET);}
 					| TIDENT TLEFTBRACKET TIDENT TRIGHTBRACKET			    {printParseError("declarator", NO_NUM);}
@@ -170,7 +170,7 @@ opt_actual_param 	: actual_param											{semantic(90);}
 actual_param 		: actual_param_list										{semantic(92);};
 actual_param_list 	: assignment_exp										{semantic(93);}
 					| actual_param_list TCOLON assignment_exp 				{semantic(94);};
-primary_exp 		: TIDENT												{printf(" TIDENT : %s \n", identStr); defineIdentType("primary expression", identStr); semantic(95);}
+primary_exp 		: TIDENT												{defineIdentType("primary expression", identStr); semantic(95);}
 					| TERROR												{semantic(95);}
 					| TNUMBER												{semantic(96);}
 	     			| TLEFTPAR expression TRIGHTPAR						{semantic(97);}

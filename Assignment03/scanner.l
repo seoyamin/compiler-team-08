@@ -52,7 +52,7 @@ digit [0-9]
 "["			return(TLEFTBRACKET);
 "]"			return(TRIGHTBRACKET);
 ";"			return(TSEMI);
-"\n"		currlinenum = currlinenum + 1;
+"\n"		currlinenum = currlinenum + 1;		// line number 증가
 {letter}({letter}|{digit})*   { if (yyleng <= 10) {			// 정상 identifier
 									SymbolTable(yytext);	
 									return(TIDENT); 

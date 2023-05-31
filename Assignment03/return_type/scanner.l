@@ -1,0 +1,80 @@
+%{
+/*
+* scanner.l - Modified MiniC를 위한 Lexical Analyzer
+* programmer - 김민서, 정은비, 최민교
+* date - 05/30/2023
+*/
+#include <stdio.h>
+#include <stdlib.h>
+#include "tn.h" 
+#include "glob.h"
+
+extern SymbolTable();
+extern printTokenError();
+%}
+letter [a-zA-Z_]
+digit [0-9]
+%%
+"const"		return(TCONST); 
+"else"		return(TELSE);
+"if"		return(TIF);
+"int"		strcpy(identReturnType, "int");return(TINT);
+"return"	return(TRETURN);
+"void"		strcpy(identReturnType, "void");return(TVOID);
+"while"		return(TWHILE);
+"+"			return(TADD);
+"-"			return(TSUB);
+"*"			return(TMUL);
+"/"			return(TDIV);
+"%"			return(TMOD);
+"="			return(TASSIGN);
+"+="		return(TADDASSIGN);
+"-="		return(TSUBASSIGN);
+"*="		return(TMULASSIGN);
+"/="		return(TDIVASSIGN);
+"%="		return(TMODASSIGN);
+"!"			return(TNOT);
+"&&"		return(TAND);
+"||"		return(TOR);
+"=="		return(TEQUAL);
+"!="		return(TNOTEQU);
+"<"			return(TLESS);
+">"			return(TGREAT);
+"<="		return(TLESSE);
+">="		return(TGREATE);
+"++"		return(TINC);
+"--"		return(TDEC);
+"("			return(TLEFTPAR);
+")"			return(TRIGHTPAR);
+","			return(TCOLON);
+"{"			return(TLEFTBRACE);
+"}"			return(TRIGHTBRACE);
+"["			return(TLEFTBRACKET);
+"]"			return(TRIGHTBRACKET);
+";"			return(TSEMI);
+"\n"		currlinenum = currlinenum + 1;
+{letter}({letter}|{digit})*   { if (yyleng <= 10) {			// 정상 identifier
+									SymbolTable(yytext);	
+									return(TIDENT); 
+								}
+								else {						// 에러 발생 (OVERLEN)	
+									printTokenError(yytext);
+									return(TERROR);    
+								}
+							  } 
+{digit}+   return(TNUMBER);
+{digit}+{letter}*	{
+						printTokenError(yytext);	// 에러 발생 (ILLIDENT)
+						return(TERROR);  
+					}
+"//".*     ;
+[ \t]      ;
+.            {
+				printTokenError(yytext);		// 에러 발생 (ILLCHAR)
+				return(TERROR);    
+			 }
+%%
+int yywrap()
+{   
+    return 1;
+}            

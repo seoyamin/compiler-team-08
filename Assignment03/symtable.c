@@ -3,6 +3,7 @@
 * programmer - 김민서, 정은비, 최민교
 * date - 05/30/2023
 */
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -10,14 +11,11 @@
 
 extern yytext;
 
-int currid = 0;				// the current index of ST
-int nextid = 0;				// the next index of ST 
-int nextfree = 0;			// the next available index of ST
-
+int currid = 0;				// String Table에서 현재 index
+int nextid = 0;				// String Table에서 다음 index
+int nextfree = 0;			// String Table에서 다음 identifier가 저장될 위치의 index
 int hashcode;				// identifier의 hashcode
-int sameid;					// identifier의 첫번째 인덱스
-
-int found;					// for the previous occurrence of an identifier
+int found;					// identifier의 존재 여부
 
 // ComputeHS - 해시코드 계산하는 함수
 void ComputeHS(int nid, int nfree) {
@@ -71,11 +69,11 @@ void ADDHT(int hscode)
 
 	ptr = (HTpointer)malloc(sizeof(ptr));
 	currid = nextid;
-	ptr->index = nextid;
-	ptr->next = HT[hscode];
-	ptr->type = NULL;
+	ptr->index = nextid;			// identifier의 index
+	ptr->next = HT[hscode];			// identifier의 next
+	ptr->type = NULL;			// identifier의 type
 	ptr->linenum = currlinenum;		// identifier가 선언된 위치의 line number 
-	ptr->returntype = -1;			// EB: identifier의 return type (identfier가 함수명인 경우 0 또는 1)
+	ptr->returntype = -1;			// identifier의 return type (identfier가 함수명인 경우: void->0, int->1)
 	HT[hscode] = ptr;				// linked list로써 identifier 삽입
 }
 
@@ -94,15 +92,15 @@ void PrintHStable() {
 			for (here = HT[i]; here != NULL; here = here->next) {
 				j = here->index;
 				printf(" -  ");
-				while (ST[j] != '\0' && j < STsize)
+				while (ST[j] != '\0' && j < STsize)	// String Table에 저장되어있는 identifier의 문자를 하나씩 출력
 					printf("%c", ST[j++]);
-				if (here->type == "function name") {
-					if (here->returntype == RETURN_VOID)
+				if (here->type == "function name") {	// identifier의 type이 함수명인 경우
+					if (here->returntype == RETURN_VOID)	
 						printf("\t(%s, line %d, return void)\n", here->type, here->linenum);
 					else if (here->returntype == RETURN_INT)
 						printf("\t(%s, line %d, return int)\n", here->type, here->linenum);
 				}
-				else
+				else	// identfier의 type이 함수명이 아닌 경우
 					printf("\t(%s, line %d)\n", here->type, here->linenum);
 			}
 			printf("\n");
@@ -110,12 +108,12 @@ void PrintHStable() {
 	}
 }
 
-// SymbolTable - identifier를 이용하여 hashcode를 계산하고, 그 값을 Hash Table에 저장하는 함수
+// SymbolTable - identifier의 hashcode를 계산하고, 그 값을 Hash Table에 저장하는 함수
 void SymbolTable(const char* identifier)
 {
-	strcpy(identStr, identifier);
+	strcpy(identStr, identifier);	// identifier 문자열을 identStr에 복사
 
-	nextfree += strlen(identifier) + 1;
+	nextfree += strlen(identifier) + 1;	// nextfree 계산
 
 	for (int i = 0; i < strlen(identifier); i++) {	// String Table에 identifier 삽입
 		ST[i + nextid] = identifier[i];

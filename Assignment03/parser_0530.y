@@ -15,6 +15,7 @@ extern yyerror();
 extern printParseError();
 
 void semantic(int);   // EB: DELETE LATER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+void defineReturnType(int returntype, const char *identifier); 
 void defineIdentType(const char *type, const char *identifier); 
 %}
 
@@ -44,9 +45,9 @@ dcl_specifiers 		: dcl_specifier											{semantic(9);}
 dcl_specifier 		: type_qualifier										{semantic(11);}
 					| type_specifier										{semantic(12);};
 type_qualifier 		: TCONST												{semantic(13);};
-type_specifier 		: TINT													{semantic(14);}
-		 			| TVOID													{semantic(15);};
-function_name 		: TIDENT												{printf(" TIDENT : %s \n", identStr); defineIdentType("function name", identStr); semantic(16);};
+type_specifier 		: TINT													{cReturntype = 1; semantic(14);}
+		 			| TVOID													{cReturntype = 0; semantic(15);};
+function_name 		: TIDENT												{printf(" TIDENT : %s \n", identStr); defineIdentType("function name", identStr); defineReturnType(cReturntype, identStr); semantic(16);};
 					| TERROR												{semantic(170);}
 formal_param 		: TLEFTPAR TRIGHTPAR 									{semantic(170);}
 					| TLEFTPAR error										{yyerrok; printParseError("formal_param", NO_RIGHTPAR); semantic(171);};
@@ -180,6 +181,54 @@ void semantic(int n)
 	//printf("reduced rule number = %d\n",n);
 }
 
+// defineReturnType - return type을 결정하는 함수
+void defineReturnType(int returntype, const char *identifier)
+{
+	int length = strlen(identifier);
+	int found = FALSE;
+
+	// 해당 identifier의 해시코드 구하기
+	int hashcode = 0;		
+	for (int i = 0; i < length; i++) {
+		hashcode += (int)identifier[i];
+	}
+	hashcode %= HTsize;
+
+	HTpointer here;
+	int i, j;
+	found = FALSE; 	// Hash Table을 읽기 전, FALSE로 초기화
+
+	// hash code 위치에 어떠한 문자라도 존재하는 경우
+	if (HT[hashcode] != NULL) {  
+		here = HT[hashcode];
+		while (here != NULL && found == FALSE) {		// 현재 가리키는 위치에 문자가 있고 아직 identifier가 발견되지 않은 경우
+			found = TRUE;
+			i = here->index;
+			j = 0;
+
+			while (ST[i] != '\0' && found == TRUE) {	// 문자를 하나씩 비교하면서 identifier의 일치 여부 판단
+				// identifier와 일치하지 않는 문자인 경우
+				if (ST[i] != identifier[j])		
+					found = FALSE;
+
+				// identifier와 일치하는 문자인 경우
+				else {					
+					i++;
+					j++;
+				} //End of else
+
+			}
+			if (found != TRUE) 
+				here = here->next;  // linked list의 다음 identifier로 이동						
+		}
+		if (here->type == "function name") {
+			//printf("identifier: %s, return type = %d\n", identifier, returntype);
+			here->returntype = returntype;	// EB: Identifier의 return type을 저장
+		}
+		else here->returntype = -1;
+	}
+}
+
 // defineIdentType - identifier의 타입 (변수, 함수 등)을 판단하고, 이를 HT에 저장하는 함수
 void defineIdentType(const char *type, const char *identifier)
 {
@@ -223,5 +272,10 @@ void defineIdentType(const char *type, const char *identifier)
 				here = here->next;  // linked list의 다음 identifier로 이동						
 		}
 		here->type = type;	// identifier의 type을 저장
+		//if (type == "function name") {
+		//	printf("return type = %d", cReturntype);
+		//	here->returntype = cReturntype;	// EB: Identifier의 return type을 저장
+		//}
+		//else here->returntype = -1;
 	}
 }

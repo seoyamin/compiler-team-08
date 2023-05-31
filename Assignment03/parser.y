@@ -4,6 +4,7 @@
 * programmer - 김민서, 정은비, 최민교
 * date - 05/30/2023
 */
+
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
@@ -215,7 +216,7 @@ primary_exp 		: TIDENT
 					;
 %%
 
-// defineReturnType - return type을 결정하는 함수
+// defineReturnType - function name에 해당하는 identifier의 return type을 저장하는 함수
 void defineReturnType(int returntype, const char *identifier)
 {
 	int length = strlen(identifier);
@@ -255,14 +256,14 @@ void defineReturnType(int returntype, const char *identifier)
 			if (found != TRUE) 
 				here = here->next;  // linked list의 다음 identifier로 이동						
 		}
-		if (here->type == "function name") {
-			here->returntype = returntype;	// EB: Identifier의 return type을 저장
+		if (here->type == "function name") {	// type이 function name인 경우
+			here->returntype = returntype;	// 매개변수로 받은 returntype 설정
 		}
-		else here->returntype = -1;
+		else here->returntype = -1;	// function name이 아닌 경우는 -1로 설정
 	}
 }
 
-// defineIdentType - identifier의 타입 (변수, 함수 등)을 판단하고, 이를 HT에 저장하는 함수
+// defineIdentType - identifier의 타입(변수, 함수 등)을 저장하는 함수
 void defineIdentType(const char *type, const char *identifier)
 {
 	int length = strlen(identifier);

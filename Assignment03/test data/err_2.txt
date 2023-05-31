@@ -1,18 +1,18 @@
 int calc(int arr)
 {
-	const int 3illid;		// token err - illegal identifier
+	const int 3illid;		
 	int xyz, yzx, zxy;
-	int arr[20;			// parse err - no right bracket
+	int arr[20;			
 
 	xyz = 100;
-	yzx = ;			// parse err - no right side expression
+	yzx = ;			
 	zxy = xyz + yzx / 9;
 	
 	while(xyz <= zxy)  {	
 		xyz *= 5;
 	}
 
-	if() {			// parse err - no expression
+	if() {			
 		return -1;
 	}
 	

@@ -98,5 +98,5 @@ void printParseError(char* non_terminal, enum parseerrortypes et)
 		printf("no number or no right bracket");
 		break;
 	}
-	printf("  (%s, line % d)\n", non_terminal, currlinenum - 1);
+	printf("  (%s, line % d)\n", non_terminal, currlinenum);
 }

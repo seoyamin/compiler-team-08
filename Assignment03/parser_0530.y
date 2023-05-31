@@ -170,7 +170,7 @@ opt_actual_param 	: actual_param											{semantic(90);}
 actual_param 		: actual_param_list										{semantic(92);};
 actual_param_list 	: assignment_exp										{semantic(93);}
 					| actual_param_list TCOLON assignment_exp 				{semantic(94);};
-primary_exp 		: TIDENT												{defineIdentType("primary expression", identStr); semantic(95);}
+primary_exp 		: TIDENT												{semantic(95);}
 					| TERROR												{semantic(95);}
 					| TNUMBER												{semantic(96);}
 	     			| TLEFTPAR expression TRIGHTPAR						{semantic(97);}

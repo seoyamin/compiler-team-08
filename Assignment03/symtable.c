@@ -75,6 +75,7 @@ void ADDHT(int hscode)
 	ptr->next = HT[hscode];
 	ptr->type = NULL;
 	ptr->linenum = currlinenum;		// identifier가 선언된 위치의 line number 
+	ptr->returntype = -1;			// EB: identifier의 return type (identfier가 함수명인 경우 0 또는 1)
 	HT[hscode] = ptr;				// linked list로써 identifier 삽입
 }
 
@@ -95,7 +96,14 @@ void PrintHStable() {
 				printf(" -  ");
 				while (ST[j] != '\0' && j < STsize)
 					printf("%c", ST[j++]);
-				printf("\t(%s, line %d)\n", here->type, here->linenum);
+				if (here->type == "function name") {
+					if (here->returntype == RETURN_VOID)
+						printf("\t(%s, line %d, return void)\n", here->type, here->linenum);
+					else if (here->returntype == RETURN_INT)
+						printf("\t(%s, line %d, return int)\n", here->type, here->linenum);
+				}
+				else
+					printf("\t(%s, line %d)\n", here->type, here->linenum);
 			}
 			printf("\n");
 		}

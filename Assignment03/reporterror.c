@@ -1,5 +1,5 @@
 /*
-* reporterror.c - token error와 parse error 출력 
+* reporterror.c - token error와 parse error 출력
 * programmer - 김민서, 정은비, 최민교
 * date - 05/30/2023
 */
@@ -97,8 +97,8 @@ void printParseError(char* non_terminal, enum parseerrortypes et)
 	case NO_NUM_OR_NO_RIGHTBRACKET:
 		printf("no number or no right bracket");
 		break;
-	case NOT_DEFINED_SPECIFIER:
-		printf("not defined specifier");
+	case ALREADY_DECLARED:
+		printf("already declared variable");
 		break;
 	}
 	printf("  (%s, line % d)\n", non_terminal, currlinenum);

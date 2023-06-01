@@ -18,6 +18,7 @@ digit [0-9]
 "const"		return(TCONST); 
 "else"		return(TELSE);
 "if"		return(TIF);
+"float"		return(TFLOAT);
 "int"		return(TINT);
 "return"	return(TRETURN);
 "void"		return(TVOID);
@@ -52,7 +53,7 @@ digit [0-9]
 "["			return(TLEFTBRACKET);
 "]"			return(TRIGHTBRACKET);
 ";"			return(TSEMI);
-"\n"		currlinenum = currlinenum + 1;		// line number 증가
+"\n"		currlinenum = currlinenum + 1;
 {letter}({letter}|{digit})*   { if (yyleng <= 10) {			// 정상 identifier
 									SymbolTable(yytext);	
 									return(TIDENT); 

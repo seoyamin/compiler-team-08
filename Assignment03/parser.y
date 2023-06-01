@@ -23,7 +23,7 @@ void defineIdentType(const char *type, const char *identifier);
 %nonassoc TELSE
 
 %token TEOF, TCONST, TELSE, TIF, TINT, TRETURN
-%token TVOID, TWHILE, TADD, TSUB, TMUL, TFLOAT
+%token TVOID, TWHILE, TADD, TSUB, TMUL
 %token TDIV, TMOD, TASSIGN, TADDASSIGN, TSUBASSIGN
 %token TMULASSIGN, TDIVASSIGN, TMODASSIGN, TNOT, TAND
 %token TOR, TEQUAL, TNOTEQU, TLESS, TGREAT
@@ -52,11 +52,10 @@ dcl_specifiers 		: dcl_specifier
 dcl_specifier 		: type_qualifier										
 					| type_specifier										
 					;
-type_qualifier 		: TCONST
+type_qualifier 		: TCONST											
 					;
 type_specifier 		: TINT													{cReturntype = 1;}
 		 			| TVOID													{cReturntype = 0;}
-					| TFLOAT												{printParseError("type_specifier", NOT_DEFINED_SPECIFIER);}
 					;
 function_name 		: TIDENT												{defineIdentType("function name", identStr); defineReturnType(cReturntype, identStr);}
 					| TERROR	
@@ -72,7 +71,6 @@ formal_param_list 	: param_dcl
 					;
 param_dcl 			: dcl_spec declarator									
 					| dcl_spec error										{yyerrok; printParseError("param_dcl", NO_DCL);}
-					| error declarator										{yyerrok;}
 					;
 compound_st 		: TLEFTBRACE TRIGHTBRACE								
 					| TLEFTBRACE error										{yyerrok; printParseError("compound_st", NO_RIGHTBRACE);}
@@ -305,6 +303,9 @@ void defineIdentType(const char *type, const char *identifier)
 			if (found != TRUE) 
 				here = here->next;  // linked list의 다음 identifier로 이동						
 		}
-		here->type = type;	// identifier의 type을 저장
+		if (here->type == NULL)
+			here->type = type;	// identifier의 type을 저장
+		else 
+			printParseError(type, ALREADY_DECLARED);
 	}
 }

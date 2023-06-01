@@ -58,8 +58,8 @@ type_specifier 		: TINT													{cReturntype = 1;}
 		 			| TVOID													{cReturntype = 0;}
 					;
 function_name 		: TIDENT												{defineIdentType("function name", identStr); defineReturnType(cReturntype, identStr);}
+					| TERROR	
 					;
-					| TERROR												
 formal_param 		: TLEFTPAR TRIGHTPAR 									
 					| TLEFTPAR error										{yyerrok; printParseError("formal_param", NO_RIGHTPAR);}
 					| TLEFTPAR formal_param_list TRIGHTPAR					

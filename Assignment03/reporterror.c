@@ -97,6 +97,9 @@ void printParseError(char* non_terminal, enum parseerrortypes et)
 	case NO_NUM_OR_NO_RIGHTBRACKET:
 		printf("no number or no right bracket");
 		break;
+	case NOT_DEFINED_SPECIFIER:
+		printf("not defined specifier");
+		break;
 	}
 	printf("  (%s, line % d)\n", non_terminal, currlinenum);
 }

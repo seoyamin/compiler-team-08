@@ -100,6 +100,9 @@ void printParseError(char* non_terminal, enum parseerrortypes et)
 	case ALREADY_DECLARED:
 		printf("already declared variable");
 		break;
+	case INVALID_LOCATION:
+		printf("token in an invalid location");
+		break;
 	}
 	printf("  (%s, line % d)\n", non_terminal, currlinenum);
 }

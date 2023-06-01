@@ -65,16 +65,16 @@ void LookupHS(int nid, int hscode)
 // ADDHT - Hash Table에 identifier를 추가하는 함수
 void ADDHT(int hscode)
 {
-	HTpointer ptr;
-
-	ptr = (HTpointer)malloc(sizeof(ptr));
-	currid = nextid;
-	ptr->index = nextid;			// identifier의 index
-	ptr->next = HT[hscode];			// identifier의 next
-	ptr->type = NULL;			// identifier의 type
-	ptr->linenum = currlinenum;		// identifier가 선언된 위치의 line number 
-	ptr->returntype = -1;			// identifier의 return type (identfier가 함수명인 경우: void->0, int->1)
-	HT[hscode] = ptr;				// linked list로써 identifier 삽입
+	HTpointer ptr = (HTpointer)malloc(sizeof(HTentry));
+	if (ptr != NULL) {
+		currid = nextid;
+		ptr->index = nextid;			// identifier의 index
+		ptr->linenum = currlinenum;		// identifier가 선언된 위치의 line number 
+		ptr->next = HT[hscode];			// identifier의 next
+		ptr->returntype = -1;			// identifier의 return type (identfier가 함수명인 경우: void->0, int->1)
+		ptr->type = NULL;			// identifier의 type
+		HT[hscode] = ptr;				// linked list로써 identifier 삽입
+	}
 }
 
 // PrintHSTable - Hash Table에 저장된 identifier를 출력하는 함수
@@ -92,10 +92,10 @@ void PrintHStable() {
 			for (here = HT[i]; here != NULL; here = here->next) {
 				j = here->index;
 				printf(" -  ");
-				while (ST[j] != '\0' && j < STsize)	// String Table에 저장되어있는 identifier의 문자를 하나씩 출력
+				while (ST[j] != '\0')	// String Table에 저장되어있는 identifier의 문자를 하나씩 출력
 					printf("%c", ST[j++]);
 				if (here->type == "function name") {	// identifier의 type이 함수명인 경우
-					if (here->returntype == RETURN_VOID)	
+					if (here->returntype == RETURN_VOID)
 						printf("\t(%s, line %d, return void)\n", here->type, here->linenum);
 					else if (here->returntype == RETURN_INT)
 						printf("\t(%s, line %d, return int)\n", here->type, here->linenum);
@@ -127,8 +127,12 @@ void SymbolTable(const char* identifier)
 
 	if (!found) {					// [case 1] HT에 저장된 이력 없는 경우 - 저장
 		ADDHT(hashcode);
+		currid = nextid;
 	}
 	else {							// [case 2] HT에 저장된 이력 있는 경우
+		for (int i = 0; i < strlen(identifier); i++) {	// ST에 저장한 내용 삭제
+			ST[nextfree - i-1] = NULL;
+		}
 		nextfree = nextid;
 	}
 	nextid = nextfree;

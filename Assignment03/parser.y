@@ -40,7 +40,8 @@ translation_unit 	: external_dcl
 external_dcl 		: function_def											
 					| declaration											
 					;
-function_def 		: function_header compound_st							
+function_def 		: function_header compound_st	
+					| function_header compound_st	error					{yyerrok; printParseError("function_def", INVALID_LOCATION);}
 					;
 function_header 	: dcl_spec function_name formal_param					
 					;

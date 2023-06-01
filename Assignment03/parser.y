@@ -90,7 +90,7 @@ declaration 		: dcl_spec init_dcl_list TSEMI
 					;
 init_dcl_list 		: init_declarator										
 					| init_dcl_list TCOLON init_declarator					
-					| init_dcl_list init_declarator error					{yyerrok; printParseError("init_dcl_list", NO_COLON);}
+					| init_dcl_list init_declarator error			     		{yyerrok; printParseError("init_dcl_list", NO_COLON);}
 					;
 init_declarator		: declarator											
 					| declarator TASSIGN TNUMBER							
@@ -257,10 +257,12 @@ void defineReturnType(int returntype, const char *identifier)
 			if (found != TRUE) 
 				here = here->next;  // linked list의 다음 identifier로 이동						
 		}
-		if (here->type == "function name") {	// type이 function name인 경우
-			here->returntype = returntype;	// 매개변수로 받은 returntype 설정
+		if (here != NULL) {
+			if (here->type == "function name") {	// type이 function name인 경우
+				here->returntype = returntype;	// 매개변수로 받은 returntype 설정
+			}
+			else here->returntype = -1;	// function name이 아닌 경우는 -1로 설정
 		}
-		else here->returntype = -1;	// function name이 아닌 경우는 -1로 설정
 	}
 }
 
@@ -304,9 +306,13 @@ void defineIdentType(const char *type, const char *identifier)
 			if (found != TRUE) 
 				here = here->next;  // linked list의 다음 identifier로 이동						
 		}
-		if (here->type == NULL)
-			here->type = type;	// identifier의 type을 저장
-		else 
-			printParseError(type, ALREADY_DECLARED);
+		if (here != NULL) {
+			if (here->type == NULL)
+				here->type = type;	// identifier의 type을 저장
+			else {
+				if (found == TRUE)
+					printParseError(type, ALREADY_DECLARED);
+			}
+		}
 	}
 }

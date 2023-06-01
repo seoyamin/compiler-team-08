@@ -310,7 +310,7 @@ void defineIdentType(const char *type, const char *identifier)
 			if (here->type == NULL)
 				here->type = type;	// identifier의 type을 저장
 			else {
-				if (found == TRUE)
+				if (here->linenum != currlinenum)
 					printParseError(type, ALREADY_DECLARED);
 			}
 		}

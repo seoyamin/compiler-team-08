@@ -1,14 +1,14 @@
-int main(){
+void main() {
 	int goodbye_compiler;
-	int a = 3
-	int b;
-	int c[3];
-	b = 3 * 3;
-	a = b + ;
+	int x1 y1;
+
+	int z1[3];
+	int z1;
+
 	hi(3, 6)
 }
 
-int hi(int a int b){
+int hi(int a int b) {
 	if(a > b) return;
 	if(a == b) return 
 }
